@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <link rel="shortcut icon" type="image/png" href="{{ STATIC_URL }}images/favicon.ico"/>
+	<title>
+		{% block title %} {% endblock %}
+	</title>
+	<link rel="stylesheet" href="/static/boot/css/bootstrap.min.css">
+	<script src="/static/boot/js/jquery.js"></script>
+	<script src="/static/boot/js/bootstrap.min.js"></script>
+	<script src="/static/boot/js/ajax.js"></script>
+	<script src="/static/boot/js/sco.modal.js"></script>
+	<style type="text/css">
+	body{
+		padding-top: 20px;
+	}
+	footer{
+		padding: 30px;
+		text-align: center;
+		background-color: #fff;
+	}
+	</style>
+	{% block css %} {% endblock %}
+	{% block js %} {% endblock %}
+</head>
+<body>
+	<div class="container">
+		{% block body %} {% endblock %}
+	</div>
+</body>
+</html>

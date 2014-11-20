@@ -1,0 +1,32 @@
+<table class="table table-bordered table-striped">
+<tr>
+	<th>品牌</th>
+	<td>{{ forms.inc }}</td>
+</tr>
+<tr>
+	<th>SN</th>
+	<td>{{ forms.sn }}</td>
+</tr>
+<tr>
+	<th>CPU型号</th>
+	<td>{{ forms.cpu }}</td>
+</tr>
+<tr>
+	<th>内存</th>
+	<td>{{ forms.mem }}</td>
+</tr>
+<tr>
+	<th>阵列卡SOTL号</th>
+	<td>{{ forms.sotl }}</td>
+</tr>
+<tr>
+	<th>磁盘序列 <span class="glyphicon glyphicon-arrow-down"></span></th>
+	<th>磁盘大小 <span class="glyphicon glyphicon-arrow-down"></span></th>
+</tr>
+{% for i in dd %}
+<tr>
+	<td>{{i.sotl}}</td>
+	<td>{{i.size}}</td>
+</tr>
+{% endfor %}
+</table>
