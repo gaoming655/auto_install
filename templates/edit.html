@@ -15,7 +15,7 @@ $(document).ready(function() {
 </script>
 
 <form action="/edit/{{id}}" method="POST" > {% csrf_token %}
-	<table class="table">
+	<table class="table table-hover">
 		<tbody>
 			<tr>
 				<th>level</th>
@@ -28,6 +28,10 @@ $(document).ready(function() {
 			<tr>
 				<th>选择系统</th>
 				<td>{{forms.kickstart}}</td>
+			</tr>
+			<tr>
+				<th>选择条带</th>
+				<td>{{ forms.stripe }}</td>
 			</tr>
 			<tr>
 				<th>选择磁盘</th>

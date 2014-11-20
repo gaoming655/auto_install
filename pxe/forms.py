@@ -12,4 +12,4 @@ class login_form(forms.Form):
 class edit_form(forms.ModelForm):
     class Meta:
         model = online
-        fields = ('ilo_ip','level','kickstart')
+        fields = ('ilo_ip','level','kickstart','stripe')

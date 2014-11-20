@@ -5,7 +5,7 @@ import datetime
 raid_chose = ((False,'不可安装'),(True,'可安装'))
 raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
 ks_choices = (('conf.ks','Centos6'),)
-
+stripe_choices = ((1024,'1M'),(64,'64K'),(512,'512K'))
 class disk_sotl(models.Model):
     sotl = models.IntegerField(max_length=2)
     size = models.CharField(max_length=10)
@@ -30,6 +30,7 @@ class online(models.Model):
     inc = models.CharField(max_length=30)
     sn = models.CharField(max_length=100,unique=True)
     sotl_total = models.IntegerField(max_length=3)
+    stripe = models.IntegerField(max_length=10,default='1024',blank=False,choices=stripe_choices)
     raid_zh = models.CharField(max_length=200,)
     kickstart = models.CharField(max_length=30,blank=False,default='conf.ks',choices=ks_choices)
     finish_status = models.BooleanField(default=False)

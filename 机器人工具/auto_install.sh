@@ -8,13 +8,14 @@ RAID (){
 	code=$?
 	disk_lv=$1
 	disk_list=$2
+	tiaodai=$3
 	if [ $code -ne "0" ];then
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdDel -Lall -a0
-		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Direct -a0
+		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Cache -strpsz${tiaodai} -a0 
 	else:
 		slot=`hpacucli ctrl all show |awk '{print $6}'`
 		hpacucli ctrl slot=${slot} array A delete forced
-		hpacucli ctrl slot=${slot} create type=ld drives=$disk_list raid=$disk_lv stripesize=1024
+		hpacucli ctrl slot=${slot} create type=ld drives=$disk_list raid=$disk_lv stripesize=${tiaodai}
 	fi 
 	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d :`
 	dd  if=/dev/zero of=$sdx  count=1

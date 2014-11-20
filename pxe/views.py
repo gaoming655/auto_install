@@ -68,11 +68,12 @@ def start(request,echo_id):
         ip = d.ip
         disk = d.raid_zh
         ks = d.kickstart
+        tiaodai = d.stripe
         if not disk:
             disk="[32:0,32:1]"
             d.raid_zh = disk
             d.save()
-        raid_url = "http://%s/raid?lv=%s&disk=%s" % (ip,lv,disk)
+        raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s" % (ip,lv,disk,tiaodai)
         grub_url = "http://%s/install?ks=%s" % (ip,ks)
         reboot_url = "http://%s/reboot" % ip
         q = requests.get(raid_url)
@@ -131,6 +132,7 @@ def edit(request,obj_id):
         disk =  d.getlist("disk_zh",'01')
         ilo_ip = d.get("ilo_ip",None)
         ks = d.get("kickstart")
+        tiaodai = d.get("stripe")
         obj = online.objects.get(id=int(obj_id))
         obj.level = level
         sotl = obj.sotl_total
@@ -138,6 +140,7 @@ def edit(request,obj_id):
         for i in disk:
             dl.append(str(sotl)+":"+str(i))
         obj.raid_zh = "[" + ",".join(dl) + "]"
+        obj.stripe = tiaodai
         obj.ilo_ip = ilo_ip
         obj.save()
         return HttpResponseRedirect("/exe/")
@@ -145,7 +148,7 @@ def edit(request,obj_id):
 def ing(request,o_id):
     """防止重复安装"""
     if request.method == "GET":
- #       online.objects.filter(id=int(o_id)).update(status=True)
+        online.objects.filter(id=int(o_id)).update(status=True)
         return HttpResponse(json.dumps({'code':0}))
 @csrf_exempt
 def register_post(request):
