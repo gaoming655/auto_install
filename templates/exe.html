@@ -1,0 +1,57 @@
+{% extends 'install.html' %}
+{% block cs %}
+<style type="text/css">
+	#help{
+		cursor:help;
+	}
+</style>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input").click(function(){
+			var id = this.id;
+			$.get("/ing/" + id,function(data,status){
+			d = JSON.parse(data);
+			if (d.code == 0){
+				$("#"+id).attr("disabled","disabled").val("安装中");
+			}			
+			})
+			$.get("/start/" + id,function(data,status){
+			dd = JSON.parse(data);
+			if (dd.code != 0){
+				$("#"+id).removeAttr("disabled").val("安装失败");
+			}
+			})
+	})
+})
+</script>
+{% endblock %}
+{% block list %}
+<table class="table table-hover table-bordered">
+	<tr>
+		<th>品牌</th>
+		<th>IP</th>
+		<th>Raid级别</th>
+		<th>磁盘(默认前俩块盘做RAID)</th>
+		<th>编辑</th>
+		<th>安装 <span id="help" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="系统默认安装前2块盘RAID1"></span></th>
+	</tr>
+		{% for i in forms %}
+	<tr>
+		<td>{{ i.inc }}</td>
+		<td>{{ i.ip }}</td>
+		<td>{{ i.level }}</td>
+		<td>{{ i.raid_zh }}</td>
+		{% if i.status %}
+		<td><button disabled="disabled" type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机">Edit</button></td>
+		<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >安装中</button></td>
+		{% else %}
+		<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" id="{{i.id}}_e">Edit</button></td>
+		<td><input  type="button" class="btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
+		{% endif %}
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}
+

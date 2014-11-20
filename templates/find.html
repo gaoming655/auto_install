@@ -1,0 +1,38 @@
+{% extends 'install.html' %}
+{% block cs %}
+<style type="text/css">
+.fff a{
+	color: #fff;
+}
+</style>
+{% endblock %}
+{% block list %}
+<table class="table table-hover">
+	<tr>
+		<th>IP</th>
+		<th>SN</th>
+		<th>详情</th>
+		<th>操作</th>
+		<th>状态</th>
+		<th>可删除</th>
+	</tr>
+		{% for i in forms %}
+	<tr>
+		<td>{{ i.ipaddr }}</td>
+		<td>{{ i.sn }}</td>
+		<td><button type="button" class="btn btn-info btn-sm" href="/info/{{ i.id }}" data-trigger="modal"  data-title="机器配置信息">详细信息</button></td>
+		{% if i.status %}
+		<td class="fff"><button type="button" class="btn btn-success btn-sm"><a href="/online/{{i.id}}">装机</a></button></td>
+		{% else %}
+		<td><button type="button" class="btn btn-danger btn-sm" disabled="disabled">禁用</button></td>
+		{% endif %}
+		{% if i.status %}
+		<td class="fff"><button type="button" class="btn btn-primary btn-sm"><a href="/lock/{{i.id}}/{{i.status}}">锁定</a></button></td>
+		{% else %}
+		<td class="fff"><button type="button" class="btn btn-warning btn-sm"><a href="/lock/{{i.id}}/{{i.status}}">解锁</a></button></td>
+		{% endif %}
+		<td><button type="button" class="btn btn-default btn-sm"><a href="/del/{{i.id}}">删除</a></button></td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}
