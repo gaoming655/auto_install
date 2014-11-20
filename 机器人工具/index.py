@@ -25,7 +25,7 @@ class Raid:
         lv = data.get('lv')
         disk = data.get('disk')
         tiaodai = data.get('tiaodai')
-        code = os.system("/bin/sh /root/auto_install.sh --raid %s %s" % (disk,lv,tiaodai))
+        code = os.system("/bin/sh /root/auto_install.sh --raid %s %s %s" % (disk,lv,tiaodai))
         return json.dumps({'code':code})
 class Info:
     def GET(self):
