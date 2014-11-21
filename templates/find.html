@@ -31,7 +31,7 @@
 		{% else %}
 		<td class="fff"><button type="button" class="btn btn-warning btn-sm"><a href="/lock/{{i.id}}/{{i.status}}">解锁</a></button></td>
 		{% endif %}
-		<td><button type="button" class="btn btn-default btn-sm"><a href="/del/{{i.id}}">删除</a></button></td>
+		<td><a data-trigger="confirm" data-cssclass="" class="btn btn-default btn-sm" href="/del/{{i.id}}">删除</a></td>
 	</tr>
 	{% endfor %}
 </table>
