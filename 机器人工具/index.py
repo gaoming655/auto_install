@@ -15,7 +15,7 @@ grub = """default=0
 timeout=5
 title LeTV Linux PXE install
     root (hd0,0)
-    kernel /boot/vmlinuz ks="%s" ksdevice=link 
+    kernel /boot/vmlinuz ks="%s" biosdevname=0 ksdevice=link 
     initrd /boot/initrd.img
 """
 app = web.application(urls, globals())
@@ -25,7 +25,7 @@ class Raid:
         lv = data.get('lv')
         disk = data.get('disk')
         tiaodai = data.get('tiaodai')
-        code = os.system("/bin/sh /root/auto_install.sh --raid %s %s %s" % (disk,lv,tiaodai))
+        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\"" % (disk,lv,tiaodai))
         return json.dumps({'code':code})
 class Info:
     def GET(self):
@@ -42,6 +42,7 @@ class install():
         return json.dumps({'code':0})
 class reboot():
     def GET(self):
+        os.system('Ipmitool -I lanplus chassis bootdev disk')
         os.system('reboot')
         return json.dumps({'reboot':0})
 class ipmi():

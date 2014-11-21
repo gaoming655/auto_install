@@ -54,6 +54,6 @@ case $key in
 		if [ $# -lt 2 ];then
 			exit "1"
 		fi
-		RAID $1 $2
+		RAID $1 $2 $3
 		;;
 esac
