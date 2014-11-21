@@ -23,7 +23,7 @@ class install(models.Model):
     def __unicode__(self):
         return "%s " % self.ipaddr
 class online(models.Model):
-    level = models.CharField(max_length=2,choices=raid_level,blank=False,default='1')
+    level = models.IntegerField(max_length=2,choices=raid_level,blank=False,default=1)
     ip = models.IPAddressField()
     ilo_ip = models.IPAddressField(null=True,blank=True)
     status = models.BooleanField(default=False)
