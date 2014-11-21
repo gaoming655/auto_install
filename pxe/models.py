@@ -5,7 +5,7 @@ import datetime
 raid_chose = ((False,'不可安装'),(True,'可安装'))
 raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
 ks_choices = (('conf.ks','Centos6'),)
-stripe_choices = ((1024,'1M'),(64,'64K'),(512,'512K'))
+stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
 class disk_sotl(models.Model):
     sotl = models.IntegerField(max_length=2)
     size = models.CharField(max_length=10)
