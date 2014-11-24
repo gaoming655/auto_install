@@ -8,14 +8,15 @@ RAID (){
 	code=$?
 	disk_lv=$1
 	disk_list=$2
-	tiaodai=$3
+	mode=$3
+	tiaodai=$4
 	if [ $code -ne "0" ];then
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdDel -Lall -a0
-		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Cache -strpsz${tiaodai} -a0 
-	else:
-		slot=`hpacucli ctrl all show |awk '{print $6}'`
-		hpacucli ctrl slot=${slot} array A delete forced
-		hpacucli ctrl slot=${slot} create type=ld drives=$disk_list raid=$disk_lv stripesize=${tiaodai}
+		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB ${mode} -strpsz${tiaodai} -a0 
+		code = $?
+		if [ $code -ne "0" ];then
+			/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Direct -strpsz${tiaodai} -a0
+		fi
 	fi 
 	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d :`
 	dd  if=/dev/zero of=$sdx  count=1
@@ -27,33 +28,17 @@ RAID (){
 	cp /root/initrd.img  /mnt/boot/
 
 }
-
-INFO(){
-	ip=`facter ipaddress`
-	mac=`facter macaddress`
-	mem=`facter memorysize`
-	cpu=`facter processor0`
-	cat > /tmp/log <<EOF
-	ip:   $ip
-	mac:  $mac
-	mem:  $mem
-	cpu:  $cpu
-EOF
-	/opt/MegaRAID/MegaCli/MegaCli64 -Pdlist -aall|grep Raw >>/tmp/log
+HP_RAID(){
 	slot=`hpacucli ctrl all show |awk '{print $6}'`
-	hpacucli  ctrl slot=${slot} pd all show
+	hpacucli ctrl slot=${slot} array A delete forced
+	hpacucli ctrl slot=${slot} create type=ld drives=$disk_list raid=$disk_lv stripesize=${tiaodai}
 }
 key=$1
 case $key in
-	--info)
-		shift
-		INFO 
-		;;
 	--raid)
 		shift
-		if [ $# -lt 2 ];then
-			exit "1"
-		fi
-		RAID $1 $2 $3
+		RAID $1 $2 $3 $4
 		;;
+	--hpraid)
+		shift
 esac

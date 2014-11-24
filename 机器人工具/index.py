@@ -5,6 +5,7 @@ import os
 import json
 urls = (
     '/raid', 'Raid',
+    '/hpraid','HPraid',
     '/','Info',
     '/ipmi','ipmi',
     '/install','install',
@@ -19,13 +20,23 @@ title LeTV Linux PXE install
     initrd /boot/initrd.img
 """
 app = web.application(urls, globals())
+class HPraid:
+    def GET(self):
+        data = web.input()
+        lv = data.get('lv')
+        disk = data.get('disk')
+        tiaodai = data.get('tiaodai')
+        mode = data.get('mode')
+        code = os.system("/bin/sh ls")
+        return json.dumps({'code':code})
 class Raid:        
     def GET(self):
         data = web.input()
         lv = data.get('lv')
         disk = data.get('disk')
         tiaodai = data.get('tiaodai')
-        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\"" % (disk,lv,tiaodai))
+        mode = data.get('mode')
+        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" \"%s\" " % (disk,lv,mode,tiaodai))
         return json.dumps({'code':code})
 class Info:
     def GET(self):
@@ -42,7 +53,7 @@ class install():
         return json.dumps({'code':0})
 class reboot():
     def GET(self):
-        os.system('Ipmitool -I lanplus chassis bootdev disk')
+        os.system('ipmitool -l lanplus chassis bootdev disk')
         os.system('reboot')
         return json.dumps({'reboot':0})
 class ipmi():

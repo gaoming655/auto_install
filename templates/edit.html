@@ -13,11 +13,7 @@ $(document).ready(function() {
 	})
 })
 </script>
-<style type="text/css">
-.modal {
-	bottom: 80%;
-}
-</style>
+
 <form action="/edit/{{id}}" method="POST" > {% csrf_token %}
 	<table class="table table-hover">
 		<tbody>
