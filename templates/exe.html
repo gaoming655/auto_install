@@ -47,7 +47,7 @@
 		<td><button disabled="disabled" type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机">Edit</button></td>
 		<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >安装中</button></td>
 		{% else %}
-		<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" id="{{i.id}}_e">Edit</button></td>
+		<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="{{i.id}}_e">Edit</button></td>
 		<td><input  type="button" class="btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
 		{% endif %}
 	</tr>

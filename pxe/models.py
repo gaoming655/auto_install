@@ -36,3 +36,8 @@ class online(models.Model):
     finish_status = models.BooleanField(default=False)
     def __unicode__(self):
         return "%s" % self.ip
+    
+class ilo_table(models.Model):
+    maunfacturer = models.CharField(max_length=100,)
+    lan_num = models.IntegerField(max_length=10,)
+    
