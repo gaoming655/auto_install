@@ -1,5 +1,5 @@
 #coding=utf-8
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,Http404,HttpResponseRedirect
 from django.contrib.auth import login,logout,authenticate
 from forms import *
@@ -187,3 +187,9 @@ def finish_api(request):
         dsn = request.POST['sn']
         online.objects.filter(ip=dip,sn=dsn).update(finish_status=True)
         return HttpResponse(json.dumps({'code':0}))
+
+@login_required(login_url="/")
+def delivery(request,obj_id):
+    o = get_object_or_404(online,id=obj_id)
+    o.delete()
+    return HttpResponseRedirect('/his/')
