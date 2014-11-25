@@ -42,7 +42,7 @@ class install():
     def GET(self):
         data = web.input()
         ks = data.get("ks","conf.ks")
-        ksurl = "http://199.0.0.1/%s" % ks
+        ksurl = "http://10.58.241.31/%s" % ks
         grub_file = open("/mnt/boot/grub/grub.conf",'w')
         grub_file.write(grub % ksurl)
         return json.dumps({'code':0})
@@ -54,9 +54,11 @@ class reboot():
 class ipmi():
     def GET(self):
         data = web.input()
-        ip = data.get(ip,None)
-        
-        stat = os.system('/bin/sh /root/auto_install.sh %s %s %s' % (ip,user,pw))
+        ilo_ip = data.get('ilo_ip',None)
+        if not ilo_ip:
+            return json.dumps({'code':0})
+        lan = data.get('lan')
+        stat = os.system('/bin/sh /root/auto_install.sh %s %s' % (ilo_ip,lan))
         return json.dumps({'code':stat})
 
 if __name__ == "__main__":

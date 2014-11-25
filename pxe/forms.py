@@ -13,3 +13,11 @@ class edit_form(forms.ModelForm):
     class Meta:
         model = online
         fields = ('ilo_ip','level','kickstart','stripe')
+        widgets ={
+            'ilo_ip':forms.TextInput(attrs={'class':'form-control'}),
+        }
+        error_messages = {
+            'ilo_ip': {
+                'invalid':_("IP地址格式不正确"),
+            }
+        }

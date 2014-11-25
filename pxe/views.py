@@ -69,17 +69,25 @@ def start(request,echo_id):
         disk = d.raid_zh
         ks = d.kickstart
         tiaodai = d.stripe
+        ilo_ip = d.ilo_ip
         if not disk:
             disk="[32:0,32:1]"
             d.raid_zh = disk
             d.save()
+        inc = d.inc
         raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s" % (ip,lv,disk,tiaodai)
         grub_url = "http://%s/install?ks=%s" % (ip,ks)
+        ilo_list = ilo_table.objects.values('maunfacturer').iterator()
         reboot_url = "http://%s/reboot" % ip
+        for i in ilo_list:
+            if i['maunfacturer'] in inc:
+                lan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
+        ipmi_url = "http://%s/ipmi?lan=%s&ilo_ip=%s" % (ip,lan,ilo_ip)
         q = requests.get(raid_url)
         j = json.loads(q.text)
         if j['code'] == 0:
             requests.get(grub_url)
+            requests.get(ipmi_url)
             requests.get(reboot_url)
             return HttpResponse(json.dumps({'code':0}))
         else:
@@ -109,7 +117,8 @@ def online_view(request,obj_id):
     incd = d.inc
     snd = d.sn
     channel = d.sotl
-    obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel)
+    dilo_ip = d.ilo_ip
+    obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel,ilo_ip=dilo_ip,)
     obj.save()
     d.delete()
     disk_sotl.objects.filter(host_id=install_id).update(host_id=obj.id)
@@ -163,7 +172,8 @@ def register_post(request):
         ip = d.get('ip')
         dsotl = d.get('sotl')
         disk = d.get('disk')
-        obj = install(inc=dinc,ipaddr=ip,cpu=dcpu,mem=dmem,sotl=dsotl,sn=dsn)
+        dilo_ip = d.get('ilo_ip',None)
+        obj = install(inc=dinc,ipaddr=ip,cpu=dcpu,mem=dmem,sotl=dsotl,sn=dsn,ilo_ip=dilo_ip)
         obj.save()
         install_id = obj.id
         for k,v in disk.items():

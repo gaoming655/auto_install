@@ -13,6 +13,7 @@ class disk_sotl(models.Model):
     
 class install(models.Model):
     inc = models.CharField(max_length=30)
+    ilo_ip = models.IPAddressField(null=True,blank=True)
     ipaddr = models.IPAddressField()
     sn = models.CharField(max_length=100,unique=True)
     status = models.BooleanField(default=True,choices=raid_chose)
@@ -40,4 +41,5 @@ class online(models.Model):
 class ilo_table(models.Model):
     maunfacturer = models.CharField(max_length=100,)
     lan_num = models.IntegerField(max_length=10,)
-    
+    def __unicode__(self):
+        return "%s" % self.maunfacturer

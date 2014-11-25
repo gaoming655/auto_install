@@ -1,4 +1,3 @@
-<script src="/static/boot/js/jquery.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#all").click(function(){
@@ -11,10 +10,26 @@ $(document).ready(function() {
    			}        
 		})
 	})
+	var ilo_obj = $("input[name='ilo_ip']")
+	var ilo_ip = ilo_obj.val()
+	if (ilo_ip == ""){
+		return;
+	}
+	else{
+		ilo_obj.attr("disabled",'');
+	}
+	$("#change").click(function(){
+		if(ilo_obj.prop("disabled")){
+			ilo_obj.prop("disabled",false);
+		}
+		else{
+			ilo_obj.prop("disabled",true);
+		}
+		})
 })
 </script>
 
-<form action="/edit/{{id}}" method="POST" > {% csrf_token %}
+<form action="/edit/{{id}}" method="POST" id="valid_form"> {% csrf_token %}
 	<table class="table table-hover">
 		<tbody>
 			<tr>
@@ -24,6 +39,7 @@ $(document).ready(function() {
 			<tr>
 				<th>管理卡IP</th>
 				<td>{{forms.ilo_ip}}</td>
+				<td><button class="btn btn-info btn-sm" type="button" id="change">修改</button></td>
 			</tr>
 			<tr>
 				<th>选择系统</th>

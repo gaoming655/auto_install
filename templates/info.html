@@ -20,6 +20,14 @@
 	<td>{{ forms.sotl }}</td>
 </tr>
 <tr>
+	<th>管理卡IP地址</th>
+	{% if forms.ilo_ip %}
+	<td>{{ forms.ilo_ip }}</td>
+	{% else %}
+	<td>此机器无管理卡IP</td>
+	{% endif %}
+</tr>
+<tr>
 	<th>磁盘序列 <span class="glyphicon glyphicon-arrow-down"></span></th>
 	<th>磁盘大小 <span class="glyphicon glyphicon-arrow-down"></span></th>
 </tr>

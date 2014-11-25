@@ -38,6 +38,16 @@ HP_RAID(){
 	hpacucli ctrl slot=${slot} array A delete forced
 	hpacucli ctrl slot=${slot} create type=ld drives=$disk_list raid=$disk_lv stripesize=${tiaodai}
 }
+IPMI(){
+	ip=$1
+	lan=$2
+	gw=${ip%.*}.1
+	ipmitool lan set $lan ipsrc static 
+	ipmitool lan set $lan ipaddr $ip
+	ipmitool lan set netmask 255.255.255.0
+	ipmitool lan set 1 defgw ipaddr  $gw
+ 
+}
 key=$1
 case $key in
 	--raid)
@@ -49,5 +59,6 @@ case $key in
 		;;
 	--ipmi)
 		shift
-		IPMI 
+		IPMI  $1 $2
+		;;
 esac
