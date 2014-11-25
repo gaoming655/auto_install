@@ -6,7 +6,6 @@ import json
 urls = (
     '/raid', 'Raid',
     '/hpraid','HPraid',
-    '/','Info',
     '/ipmi','ipmi',
     '/install','install',
     '/reboot','reboot'
@@ -28,21 +27,17 @@ class HPraid:
         tiaodai = data.get('tiaodai')
         mode = data.get('mode')
         code = os.system("/bin/sh ls")
-        return json.dumps({'code':code})
+        return json.dumps({'code':code,})
 class Raid:        
     def GET(self):
+        msg_dict = {0:'正在安装',10:'Raid创建失败或者Raid参数不支持'}
         data = web.input()
         lv = data.get('lv')
         disk = data.get('disk')
         tiaodai = data.get('tiaodai')
         mode = data.get('mode')
         code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" \"%s\" " % (disk,lv,mode,tiaodai))
-        return json.dumps({'code':code})
-class Info:
-    def GET(self):
-        os.system('/bin/sh /root/auto_install.sh --info')
-        filemesg = open("/tmp/log",'r').read()
-        return filemesg
+        return json.dumps({'code':code,'msg':msg_dict[code]})
 class install():
     def GET(self):
         data = web.input()
@@ -60,10 +55,7 @@ class ipmi():
     def GET(self):
         data = web.input()
         ip = data.get(ip,None)
-        user = data.get(user,None)
-        pw = data.get(pw,None)
-        if not ip and not user and not pw:
-            return json.dump({'code':1})
+        
         stat = os.system('/bin/sh /root/auto_install.sh %s %s %s' % (ip,user,pw))
         return json.dumps({'code':stat})
 

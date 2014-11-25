@@ -16,8 +16,12 @@ RAID (){
 		code = $?
 		if [ $code -ne "0" ];then
 			/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Direct -strpsz${tiaodai} -a0
-		fi
-	fi 
+		else
+			exit 10
+	fi
+	DISK
+}
+DISK(){ 
 	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d :`
 	dd  if=/dev/zero of=$sdx  count=1
 	sfdisk $sdx -uM < /root/disk.data
@@ -26,8 +30,9 @@ RAID (){
 	grub-install --root-directory=/mnt/ $sdx 
 	cp /root/vmlinuz  /mnt/boot/
 	cp /root/initrd.img  /mnt/boot/
-
+	ipmitool -l lanplus chassis bootdev disk
 }
+
 HP_RAID(){
 	slot=`hpacucli ctrl all show |awk '{print $6}'`
 	hpacucli ctrl slot=${slot} array A delete forced
@@ -41,4 +46,8 @@ case $key in
 		;;
 	--hpraid)
 		shift
+		;;
+	--ipmi)
+		shift
+		IPMI 
 esac
