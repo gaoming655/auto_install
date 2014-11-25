@@ -35,8 +35,7 @@ class Raid:
         lv = data.get('lv')
         disk = data.get('disk')
         tiaodai = data.get('tiaodai')
-        mode = data.get('mode')
-        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" \"%s\" " % (disk,lv,mode,tiaodai))
+        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" " % (disk,lv,tiaodai))
         return json.dumps({'code':code,'msg':msg_dict[code]})
 class install():
     def GET(self):
@@ -58,7 +57,7 @@ class ipmi():
         if not ilo_ip:
             return json.dumps({'code':0})
         lan = data.get('lan')
-        stat = os.system('/bin/sh /root/auto_install.sh %s %s' % (ilo_ip,lan))
+        stat = os.system('/bin/sh /root/auto_install.sh --ipmi %s %s' % (ilo_ip,lan))
         return json.dumps({'code':stat})
 
 if __name__ == "__main__":

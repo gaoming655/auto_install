@@ -6,18 +6,18 @@ RAID (){
 	inc=`/usr/bin/facter manufacturer`
 	echo $inc|grep HP > /dev/null
 	code=$?
-	disk_lv=$1
-	disk_list=$2
-	mode=$3
-	tiaodai=$4
+	disk_list=$1
+	disk_lv=$2
+	tiaodai=$3
 	if [ $code -ne "0" ];then
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdDel -Lall -a0
-		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB ${mode} -strpsz${tiaodai} -a0 
-		code = $?
+		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Cache -strpsz${tiaodai} -a0 
+		code=$?
 		if [ $code -ne "0" ];then
 			/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Direct -strpsz${tiaodai} -a0
 		else
 			exit 10
+                fi
 	fi
 	DISK
 }
@@ -30,7 +30,7 @@ DISK(){
 	grub-install --root-directory=/mnt/ $sdx 
 	cp /root/vmlinuz  /mnt/boot/
 	cp /root/initrd.img  /mnt/boot/
-	ipmitool -l lanplus chassis bootdev disk
+	ipmitool -I open  chassis bootdev disk
 }
 
 HP_RAID(){
@@ -44,15 +44,15 @@ IPMI(){
 	gw=${ip%.*}.1
 	ipmitool lan set $lan ipsrc static 
 	ipmitool lan set $lan ipaddr $ip
-	ipmitool lan set netmask 255.255.255.0
-	ipmitool lan set 1 defgw ipaddr  $gw
+	ipmitool lan set $lan netmask 255.255.255.0
+	ipmitool lan set $lan defgw ipaddr  $gw
  
 }
 key=$1
 case $key in
 	--raid)
 		shift
-		RAID $1 $2 $3 $4
+		RAID $1 $2 $3
 		;;
 	--hpraid)
 		shift

@@ -81,7 +81,8 @@ def start(request,echo_id):
         reboot_url = "http://%s/reboot" % ip
         for i in ilo_list:
             if i['maunfacturer'] in inc:
-                lan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
+                lan = ilo_table.objects.get(maunfacturer=i['maunfacturer']).lan_num
+                break
         ipmi_url = "http://%s/ipmi?lan=%s&ilo_ip=%s" % (ip,lan,ilo_ip)
         q = requests.get(raid_url)
         j = json.loads(q.text)

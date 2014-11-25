@@ -18,7 +18,7 @@ class install(models.Model):
     sn = models.CharField(max_length=100,unique=True)
     status = models.BooleanField(default=True,choices=raid_chose)
     day = models.DateField(default=datetime.datetime.now())
-    cpu = models.CharField(max_length=40,)
+    cpu = models.CharField(max_length=100,)
     mem = models.CharField(max_length=20,)
     sotl = models.CharField(max_length=5)
     def __unicode__(self):
