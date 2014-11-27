@@ -32,6 +32,7 @@
 	<tr>
 		<th>品牌</th>
 		<th>IP</th>
+		<th>ILO_IP</th>
 		<th>Raid级别</th>
 		<th>磁盘(默认前俩块盘做RAID)</th>
 		<th>编辑</th>
@@ -41,6 +42,7 @@
 	<tr>
 		<td>{{ i.inc }}</td>
 		<td>{{ i.ip }}</td>
+		<td>{{ i.ilo_ip }}</td>
 		<td>{{ i.level }}</td>
 		<td>{{ i.raid_zh }}</td>
 		{% if i.status %}
