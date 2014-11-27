@@ -29,7 +29,7 @@ def logout_page(request):
     logout(request)
     return HttpResponseRedirect("/")
 #----------------------------------------------------------------------
-    
+
 @login_required(login_url="/")
 def find_page(request):
     """发现主机"""
@@ -44,7 +44,10 @@ def info(request,info_id):
     """主机详情"""
     if request.method == "GET":
         machine_info = install.objects.get(id = int(info_id))
-        disk_list = disk_sotl.objects.filter(host_id=int(info_id))
+        if "HP" not in machine_info.inc:
+            disk_list = disk_sotl.objects.filter(host_id=int(info_id))
+        else:
+            disk_list = disk_hp.objects.filter(host_id=int(info_id))
         return render(request,"info.html",{"forms":machine_info,'dd': disk_list})
 
 #----------------------------------------------------------------------
@@ -56,9 +59,9 @@ def exe_page(request):
         on_total = len(f)
         total = len(install.objects.all())
         return render(request,"exe.html",{'forms':f,"total":total, "on_total":on_total,"index":"exe"})
-    
-    
-    
+
+
+
 @login_required(login_url="/")
 def start(request,echo_id):
     """点击开始"""
@@ -70,10 +73,6 @@ def start(request,echo_id):
         ks = d.kickstart
         tiaodai = d.stripe
         ilo_ip = d.ilo_ip
-        if not disk:
-            disk="[32:0,32:1]"
-            d.raid_zh = disk
-            d.save()
         inc = d.inc
         raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s" % (ip,lv,disk,tiaodai)
         grub_url = "http://%s/install?ks=%s" % (ip,ks)
@@ -95,6 +94,7 @@ def start(request,echo_id):
             return HttpResponse(json.dumps({'code':1}))
 
 
+
 @login_required(login_url="/")
 def del_obj(request,obj_id):
     if request.method == "GET":
@@ -108,7 +108,7 @@ def lock_obj(request,obj_id,obj_code):
         else:
             install.objects.filter(id=int(obj_id)).update(status=True)
         return HttpResponseRedirect('/find/')
-    
+
 @login_required(login_url="/")
 def online_view(request,obj_id):
     """放入装机队列"""
@@ -122,7 +122,10 @@ def online_view(request,obj_id):
     obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel,ilo_ip=dilo_ip,)
     obj.save()
     d.delete()
-    disk_sotl.objects.filter(host_id=install_id).update(host_id=obj.id)
+    if "HP" not in incd:
+        disk_sotl.objects.filter(host_id=install_id).update(host_id=obj.id)
+    else:
+        disk_hp.objects.filter(host_id=install_id).update(host_id=obj.id)
     return HttpResponseRedirect("/find/")
 
 @login_required(login_url="/")
@@ -131,7 +134,10 @@ def edit(request,obj_id):
     if request.method == "GET":
         obj = online.objects.get(id=int(obj_id))
         f = edit_form(instance=obj)
-        disk_list = disk_sotl.objects.filter(host_id=obj_id).order_by("sotl")
+        if "HP" not in obj.inc:
+            disk_list = disk_sotl.objects.filter(host_id=obj_id).order_by("sotl")
+        else:
+            disk_list = disk_hp.objects.filter(host_id=obj_id).order_by("sotl")
         if not disk_list:
             disk_list=None
         return render(request,"edit.html",{"forms":f,"disk":disk_list,"id":obj_id})
@@ -139,7 +145,7 @@ def edit(request,obj_id):
         dl = []
         d = request.POST
         level = d.get("level")
-        disk =  d.getlist("disk_zh",'01')
+        disk =  d.getlist("disk_zh")
         ilo_ip = d.get("ilo_ip",None)
         ks = d.get("kickstart")
         tiaodai = d.get("stripe")
@@ -147,9 +153,13 @@ def edit(request,obj_id):
         obj.level = level
         sotl = obj.sotl_total
         obj.kickstart = ks
-        for i in disk:
-            dl.append(str(sotl)+":"+str(i))
-        obj.raid_zh = "[" + ",".join(dl) + "]"
+        incd = obj.inc
+        if "HP" not in  incd:
+            for i in disk:
+                dl.append(str(sotl)+":"+str(i))
+                obj.raid_zh = "[" + ",".join(dl) + "]"
+        else:
+            obj.raid_zh = ",".join(disk)
         obj.stripe = tiaodai
         obj.ilo_ip = ilo_ip
         obj.save()
@@ -177,10 +187,17 @@ def register_post(request):
         obj = install(inc=dinc,ipaddr=ip,cpu=dcpu,mem=dmem,sotl=dsotl,sn=dsn,ilo_ip=dilo_ip)
         obj.save()
         install_id = obj.id
-        for k,v in disk.items():
-            dso = disk_sotl(sotl=int(k),size=v,host_id=install_id)
-            dso.save()
-            dso =None
+        print dinc
+        if  "HP" not in dinc:
+            for k,v in disk.items():
+                dso = disk_sotl(sotl=int(k),size=v,host_id=install_id)
+                dso.save()
+                dso = None
+        else:
+            for k,v in disk.items():
+                hpdso = disk_hp(sotl=k,size=v,host_id=install_id)
+                hpdso.save()
+                hpdso = None
     return HttpResponse(json.dumps({"code":0}))
 
 @login_required(login_url="/")

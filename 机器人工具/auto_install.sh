@@ -2,27 +2,29 @@
 #letv functions auto install  machine bash
 #mady by G.M
 #date: 2014-11-11
+inc=`/usr/bin/facter manufacturer`
+echo $inc|grep HP > /dev/null
+code=$?
 RAID (){
-	inc=`/usr/bin/facter manufacturer`
-	echo $inc|grep HP > /dev/null
-	code=$?
 	disk_list=$1
 	disk_lv=$2
 	tiaodai=$3
 	if [ $code -ne "0" ];then
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdDel -Lall -a0
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Cache -strpsz${tiaodai} -a0 
-		code=$?
-		if [ $code -ne "0" ];then
+		xcode=$?
+		if [ $xcode -ne "0" ];then
 			/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Direct -strpsz${tiaodai} -a0
 		else
 			exit 10
-                fi
+        fi
+    else 
+    	HP_RAID
 	fi
 	DISK
 }
 DISK(){ 
-	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d :`
+	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d :` |head -n 1
 	dd  if=/dev/zero of=$sdx  count=1
 	sfdisk $sdx -uM < /root/disk.data
 	mkfs.ext4 ${sdx}1
@@ -36,7 +38,7 @@ DISK(){
 HP_RAID(){
 	slot=`hpacucli ctrl all show |awk '{print $6}'`
 	hpacucli ctrl slot=${slot} array A delete forced
-	hpacucli ctrl slot=${slot} create type=ld drives=$disk_list raid=$disk_lv stripesize=${tiaodai}
+	hpacucli ctrl slot=${slot} create type=ld drives=${disk_list} raid=${disk_lv} stripesize=${tiaodai}
 }
 IPMI(){
 	ip=$1
@@ -46,6 +48,9 @@ IPMI(){
 	ipmitool lan set $lan ipaddr $ip
 	ipmitool lan set $lan netmask 255.255.255.0
 	ipmitool lan set $lan defgw ipaddr  $gw
+	if [ $code -eq "0" ];then
+		ipmitool  user set   password 1 @qiugaoqs123
+	fi
  
 }
 key=$1

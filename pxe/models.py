@@ -43,3 +43,8 @@ class ilo_table(models.Model):
     lan_num = models.IntegerField(max_length=10,)
     def __unicode__(self):
         return "%s" % self.maunfacturer
+    
+class disk_hp(models.Model):
+    sotl = models.CharField(max_length=20,)
+    size = models.CharField(max_length=20,)
+    host_id = models.IntegerField(max_length=10,)
