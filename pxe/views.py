@@ -141,7 +141,7 @@ def edit(request,obj_id):
         if not disk_list:
             disk_list=None
         return render(request,"edit.html",{"forms":f,"disk":disk_list,"id":obj_id})
-    else:
+    elif request.method == "POST":
         dl = []
         d = request.POST
         level = d.get("level")
@@ -149,8 +149,14 @@ def edit(request,obj_id):
         ilo_ip = d.get("ilo_ip",None)
         ks = d.get("kickstart")
         tiaodai = d.get("stripe")
+        sip = d.get("service_ip")
+        snk = d.get("service_netmask")
+        sgw = d.get("service_gw")
         obj = online.objects.get(id=int(obj_id))
         obj.level = level
+        obj.service_ip = sip
+        obj.service_netmask = snk
+        obj.service_gw = sgw
         sotl = obj.sotl_total
         obj.kickstart = ks
         incd = obj.inc

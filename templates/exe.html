@@ -30,8 +30,8 @@
 {% block list %}
 <table class="table table-hover table-bordered">
 	<tr>
-		<th>品牌</th>
-		<th>IP</th>
+		<th>业务IP</th>
+		<th>DHCP_IP</th>
 		<th>ILO_IP</th>
 		<th>Raid级别</th>
 		<th>磁盘(默认前俩块盘做RAID)</th>
@@ -40,7 +40,7 @@
 	</tr>
 		{% for i in forms %}
 	<tr>
-		<td>{{ i.inc }}</td>
+		<td>{{ i.service_ip }}</td>
 		<td>{{ i.ip }}</td>
 		<td>{{ i.ilo_ip }}</td>
 		<td>{{ i.level }}</td>
@@ -50,10 +50,10 @@
 		<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >安装中</button></td>
 		{% else %}
 		<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="{{i.id}}_e">Edit</button></td>
-		{% if i.raid_zh %}
+		{% if i.raid_zh and i.service_ip and i.service_netmask and i.service_gw %}
 		<td><input  type="button" class="btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
 		{% else %}
-		<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >请先选择磁盘</button></td>
+		<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >请先编辑</button></td>
 		{% endif %}
 		{% endif %}
 	</tr>

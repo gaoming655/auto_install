@@ -6,6 +6,7 @@ raid_chose = ((False,'不可安装'),(True,'可安装'))
 raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
 ks_choices = (('conf.ks','Centos6'),)
 stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
+netmask=(("255.255.255.0","24位"),("255.255.0.0","16位"))
 class disk_sotl(models.Model):
     sotl = models.IntegerField(max_length=2)
     size = models.CharField(max_length=10)
@@ -26,6 +27,9 @@ class install(models.Model):
 class online(models.Model):
     level = models.IntegerField(max_length=2,choices=raid_level,blank=False,default=1)
     ip = models.IPAddressField()
+    service_ip = models.IPAddressField(null=True,blank=True)
+    service_netmask = models.CharField(max_length=30,choices=netmask,default="255.255.255.0",blank=False)
+    service_gw = models.IPAddressField(null=True,blank=True)
     ilo_ip = models.IPAddressField(null=True,blank=True)
     status = models.BooleanField(default=False)
     inc = models.CharField(max_length=30)
