@@ -24,7 +24,7 @@ RAID (){
 	DISK
 }
 DISK(){ 
-	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d :` |head -n 1
+	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d : |head -n 1`
 	dd  if=/dev/zero of=$sdx  count=1
 	sfdisk $sdx -uM < /root/disk.data
 	mkfs.ext4 ${sdx}1
