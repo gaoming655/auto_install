@@ -42,7 +42,7 @@ class install():
     def GET(self):
         data = web.input()
         ks = data.get("ks","conf.ks")
-        ksurl = "http://10.58.241.31/%s" % ks
+        ksurl = "http://10.58.241.31/kickstart/%s" % ks
         grub_file = open("/mnt/boot/grub/grub.conf",'w')
         grub_file.write(grub % ksurl)
         return json.dumps({'code':0})

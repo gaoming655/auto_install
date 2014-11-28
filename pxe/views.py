@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 import requests
 import json
 from django.views.decorators.csrf import csrf_exempt
+import os
 # Create your views here.
 
 def login_view(request):
@@ -66,6 +67,8 @@ def exe_page(request):
 def start(request,echo_id):
     """点击开始"""
     if request.method == 'GET':
+        ks_path = "/var/www/html/"
+        new_ks_path = "/var/www/html/kickstart/"
         d = online.objects.get(id=int(echo_id))
         lv = d.level
         ip = d.ip
@@ -74,8 +77,17 @@ def start(request,echo_id):
         tiaodai = d.stripe
         ilo_ip = d.ilo_ip
         inc = d.inc
+        s_ip = d.service_ip
+        nk = d.service_netmask
+        gw = d.service_gw
+        #add service IP address
+        new_ks_file = open("%s%s" % (new_ks_path,d.sn), 'w')
+        ks_file_content = open("%s%s" % (ks_path,ks), 'r').read()
+        end_ks_file_content = ks_file_content.replace("nmip",s_ip).replace("nmnm",nk).replace("nmgw",gw)
+        new_ks_file.write(end_ks_file_content)
+        new_ks_file.close()
         raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s" % (ip,lv,disk,tiaodai)
-        grub_url = "http://%s/install?ks=%s" % (ip,ks)
+        grub_url = "http://%s/install?ks=%s" % (ip,d.sn)
         ilo_list = ilo_table.objects.values('maunfacturer').iterator()
         reboot_url = "http://%s/reboot" % ip
         for i in ilo_list:
@@ -224,6 +236,10 @@ def finish_api(request):
 
 @login_required(login_url="/")
 def delivery(request,obj_id):
+    ks_del_file_path = "/var/www/html/kickstart/"
     o = get_object_or_404(online,id=obj_id)
+    get_sn = o.sn
+    os.remove("%s%s" % (ks_del_file_path,get_sn))
     o.delete()
+    
     return HttpResponseRedirect('/his/')
