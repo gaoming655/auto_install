@@ -9,6 +9,8 @@ auto_install
 
 ![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/info.jpg)  
 
-![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/edit.jpg)  
+![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/edit.jpg) 
+
+![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/jd.jpg)
 
 ![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/wancheng.jpg)
