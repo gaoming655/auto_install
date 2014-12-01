@@ -185,12 +185,6 @@ def edit(request,obj_id):
         obj.ilo_ip = ilo_ip
         obj.save()
         return HttpResponseRedirect("/exe/")
-@login_required(login_url="/")
-def ing(request,o_id):
-    """防止重复安装"""
-    if request.method == "GET":
-        online.objects.filter(id=int(o_id)).update(status=True)
-        return HttpResponse(json.dumps({'code':0}))
 @csrf_exempt
 def register_post(request):
     """内存OS注册接口"""
