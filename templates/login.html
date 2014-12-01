@@ -4,25 +4,48 @@
 {% endblock %}
 {% block css%}
 	<style type="text/css">
-	.form-signin{
-		margin-right: 330px;
-		margin-left: 330px;
-		max-width: 500px;
-		padding-top: 60px;
-	}
+
 	body{
 		background-color: #eee;
+		padding-top: 5%;
 	}
 	h2 {
 		text-align: center;
+		padding-bottom: 30px;
+	}
+	span{
+		margin: 0;
+		padding:0;
+		color: #999999;
+		line-height: 20px;
+	}
+	.LoginForm{
+		padding-top: 100px;
+		line-height: 50px;
+		padding-left: 100px;
+		width: 400px;
+	}
+	img{
+		padding-left: 10%;
 	}
 	</style>
 {% endblock %}
 {% block body%}
-<form class="form-signin" method="post" role="form">{% csrf_token %}
-	<h2 class="form-signin-heading">登录</h2>
-	{{ forms.username }}
-	{{ forms.passwd }}
-	<button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
-</form>
+<div class="bimg">
+	<div class="row">
+		<h2>欢迎登录</h2>
+			<div class="col-md-6">
+				<img src="/static/images/login.jpg">
+			</div>
+			<div class="col-md-6">
+				<form class="LoginForm"method="post" role="form">{% csrf_token %}
+					<span>用户名</span>
+					{{ forms.username }}
+					<span>密码</span>
+					{{ forms.passwd }}
+					<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+				</form>
+			</div>
+	</div>
+</div>
 {% endblock %}
