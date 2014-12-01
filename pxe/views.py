@@ -27,6 +27,7 @@ def login_view(request):
         return render(request,'login.html',{'forms':f})
 
 def logout_page(request):
+    """注销用户"""
     logout(request)
     return HttpResponseRedirect("/")
 #----------------------------------------------------------------------
@@ -54,14 +55,12 @@ def info(request,info_id):
 #----------------------------------------------------------------------
 @login_required(login_url="/")
 def exe_page(request):
-    """执行装机"""
+    """装机队列页面"""
     if request.method == 'GET':
         f = online.objects.filter(finish_status=False)
         on_total = len(f)
         total = len(install.objects.all())
         return render(request,"exe.html",{'forms':f,"total":total, "on_total":on_total,"index":"exe"})
-
-
 
 @login_required(login_url="/")
 def start(request,echo_id):
@@ -101,6 +100,8 @@ def start(request,echo_id):
             requests.get(grub_url)
             requests.get(ipmi_url)
             requests.get(reboot_url)
+            d.status=True
+            d.save()
             return HttpResponse(json.dumps({'code':0}))
         else:
             return HttpResponse(json.dumps({'code':1}))
@@ -109,11 +110,13 @@ def start(request,echo_id):
 
 @login_required(login_url="/")
 def del_obj(request,obj_id):
+    """删除误重启的机器"""
     if request.method == "GET":
         obj = install.objects.get(id=int(obj_id)).delete()
         return HttpResponseRedirect('/find/')
 @login_required(login_url="/")
 def lock_obj(request,obj_id,obj_code):
+    """锁定机器"""
     if request.method == "GET":
         if eval(obj_code):
             install.objects.filter(id=int(obj_id)).update(status=False)

@@ -2,7 +2,7 @@
 {% block cs %}
 <style type="text/css">
 	#help{
-		cursor:help;
+		cursor:pointer;
 	}
 </style>
 {% endblock %}
@@ -11,23 +11,27 @@
 	$(document).ready(function() {
 		$("input").click(function(){
 			var id = this.id;
-			$.get("/ing/" + id,function(data,status){
+			$.get("/start/" + id,function(data,status){
 			d = JSON.parse(data);
+		//	alert(d.code);
 			if (d.code == 0){
 				$("#"+id).attr("disabled","disabled").val("安装中");
+				location.reload();
+			}
+			else {
+				$("#"+id).val("安装失败");
 			}			
 			})
-			$.get("/start/" + id,function(data,status){
-			dd = JSON.parse(data);
-			if (dd.code != 0){
-				$("#"+id).removeAttr("disabled").val("安装失败");
-			}
-			})
-	})
+		})
+		$("#help").click(function() {
+			$(".default_alert").html('<div class="alert alert-warning alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button><strong>系统默认安装前2块盘RAID1</strong></div>')
+		})
 })
 </script>
 {% endblock %}
 {% block list %}
+<div class="default_alert">
+</div>
 <table class="table table-hover table-bordered">
 	<tr>
 		<th>业务IP</th>
@@ -36,7 +40,7 @@
 		<th>Raid级别</th>
 		<th>磁盘(默认前俩块盘做RAID)</th>
 		<th>编辑</th>
-		<th>安装 <span id="help" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="系统默认安装前2块盘RAID1"></span></th>
+		<th>安装 <span id="help" class="glyphicon glyphicon-info-sign"></span></th>
 	</tr>
 		{% for i in forms %}
 	<tr>
@@ -46,15 +50,15 @@
 		<td>{{ i.level }}</td>
 		<td>{{ i.raid_zh }}</td>
 		{% if i.status %}
-		<td><button disabled="disabled" type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机">Edit</button></td>
-		<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >安装中</button></td>
+			<td><button disabled="disabled" type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机">-----</button></td>
+			<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >安装中</button></td>
 		{% else %}
-		<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="{{i.id}}_e">Edit</button></td>
-		{% if i.raid_zh and i.service_ip and i.service_netmask and i.service_gw %}
-		<td><input  type="button" class="btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
-		{% else %}
-		<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >请先编辑</button></td>
-		{% endif %}
+			<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="{{i.id}}_e">Edit</button></td>
+			{% if i.raid_zh and i.service_ip and i.service_netmask and i.service_gw %}
+				<td><input  type="button" class="btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
+			{% else %}
+				<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >请先编辑</button></td>
+			{% endif %}
 		{% endif %}
 	</tr>
 	{% endfor %}

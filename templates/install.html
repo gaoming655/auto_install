@@ -15,42 +15,31 @@
 	.panel {
 		margin-bottom: 0;
 	}
- .info {
-border-radius: 10px;
-position: fixed;
-margin-left: -280px;
-width: 560px;
-position: fixed;
-top: 10px;
-right: 0;
-bottom: 10px;
-left: 50%;
-z-index: 1050;
-display: none;
-overflow: auto;
--webkit-overflow-scrolling: touch;
-outline: 0;
-background-color: #fff;
-}
+.info,.del {
+  border-radius: 10px;
+  position: fixed;
+  margin-left: -280px;
+  width: 560px;
+  position: fixed;
+  right: 0;
+  left: 50%;
+  z-index: 1050;
+  display: none;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+  background-color: #fff;
+  }
  .del {
-border-radius: 10px;
-position: fixed;
-margin-left: -280px;
-width: 560px;
-position: fixed;
-top: 2%;
-right: 0;
-bottom: 81%;
-left: 50%;
-z-index: 1050;
-display: none;
-overflow: hidden;
--webkit-overflow-scrolling: touch;
-outline: 0;
-background-color: #fff;
-}
+  top: 2%;
+  bottom: 81%;
+  }
+ .info {
+  top: 10px;
+  bottom: 10px;
+  overflow: auto;
+  }
 .panel-body {
-padding: 5px;
+  padding: 5px;
 }
 </style>
 {% block cs %}
