@@ -39,6 +39,7 @@ class online(models.Model):
     raid_zh = models.CharField(max_length=200,)
     kickstart = models.CharField(max_length=30,blank=False,default='conf.ks',choices=ks_choices)
     finish_status = models.BooleanField(default=False)
+    jindu = models.IntegerField(max_length=3,default=0)
     def __unicode__(self):
         return "%s" % self.ip
     
