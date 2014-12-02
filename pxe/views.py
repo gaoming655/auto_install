@@ -233,10 +233,29 @@ def finish_api(request):
 
 @login_required(login_url="/")
 def delivery(request,obj_id):
-    ks_del_file_path = "/var/www/html/kickstart/"
-    o = get_object_or_404(online,id=obj_id)
-    get_sn = o.sn
-    os.remove("%s%s" % (ks_del_file_path,get_sn))
-    o.delete()
+    if request.method == "GET":
+        ks_del_file_path = "/var/www/html/kickstart/"
+        o = get_object_or_404(online,id=obj_id)
+        get_sn = o.sn
+        os.remove("%s%s" % (ks_del_file_path,get_sn))
+        o.delete()
+        
+        return HttpResponseRedirect('/his/')
+
+@csrf_exempt
+def jindu_post(request,get_sn):
+    if request.method == "POST":
+        jindu = int(request.POST.get('jindu',0))
+        d = online.objects.get(sn=get_sn)
+        d.jindu = jindu
+        d.save()
+        return HttpResponse(json.dumps({'code':0}))
     
-    return HttpResponseRedirect('/his/')
+
+@login_required(login_url="/")
+def get_jindu_from_db(request,get_id):
+    if request.method == "GET":
+        d = online.objects.get(id=int(get_id))
+        jindu_val = d.jindu
+        return HttpResponse(json.dumps({"val":jindu_val}))
+        

@@ -7,6 +7,9 @@
 	.progress-bar{
 		color: orange;
 	}
+	.progress{
+		margin-bottom: 0px;
+	}
 	.td{
 		width: 100px;
 	}
@@ -52,10 +55,36 @@
 	<tr>
 		<td>{{ i.service_ip }}</td>
 		<td class="td"><div class="progress">
-  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{i.jindu}}" aria-valuemin="0" aria-valuemax="100" style="width: {{i.jindu}}%">
-    {{i.jindu}}%
-  </div>
-</div></td>
+  			<div id="hostprogress{{i.id}}" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{i.jindu}}%">
+    		{{i.jindu}}%
+  			</div>
+		</div>
+		{% if i.status %}
+		<script type="text/javascript">
+            $(document).ready(function(){
+        var progresspump = setInterval(function(){
+            /* query the completion percentage from the server */
+            $.get("/jindu_get/{{ i.id }}/",function(result){
+               /* update the progress bar width */
+               var result= eval('('+result+')');
+               $.each(result,function(index,d){
+               var data = d;
+               console.log(data);
+                /* update the progress bar width */
+                $("#hostprogress{{ i.id }}").css('width',data+'%');
+                /* and display the numeric value */
+                $("#hostprogress{{ i.id }}").text(data+'%');
+                /* test to see if the job has completed */
+                if(data > 99.999) {
+                /*    window.location.reload(); */
+                    clearInterval(progresspump);
+                }
+            })
+            })
+        }, 5000);});
+		</script>
+		{% endif %}
+		</td>
 		<td>{{ i.ilo_ip }}</td>
 		<td>{{ i.level }}</td>
 		<td>{{ i.raid_zh }}</td>

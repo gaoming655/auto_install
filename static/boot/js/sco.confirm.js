@@ -29,7 +29,7 @@
 
 		var $modal = $(this.options.target);
 		if (!$modal.length) {
-			$modal = $('<div class="modal" id="' + this.options.target.substr(1) + '"><div class="modal-body inner"/><div class="modal-footer"><a class="btn cancel" href="#" data-dismiss="modal">cancel</a> <a href="#" class="btn btn-danger" data-action="1">yes</a></div></div>').appendTo(this.options.appendTo).hide();
+			$modal = $('<div class="modal" id="' + this.options.target.substr(1) + '"><div class="modal-body inner"/><div class="modal-footer"><a class="btn cancel" href="#" data-dismiss="modal">我在想一想</a> <a href="#" class="btn btn-danger" data-action="1">确定	</a></div></div>').appendTo(this.options.appendTo).hide();
 			if (typeof this.options.action == 'function') {
 				var self = this;
 				$modal.find('[data-action]').attr('href', '#').on('click.' + pluginName, function(e) {
@@ -92,7 +92,7 @@
 	};
 
 	$.fn[pluginName].defaults = {
-		content: 'Are you sure you want to delete :title?'
+		content: '您确定要删除这条记录吗?'
 		,cssclass: 'confirm_modal'
 		,target: '#confirm_modal'	// this must be an id. This is a limitation for now, @todo should be fixed
 		,appendTo: 'body'	// where should the modal be appended to (default to document.body). Added for unit tests, not really needed in real life.
