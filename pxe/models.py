@@ -4,7 +4,7 @@ import datetime
 # Create your models here.
 raid_chose = ((False,'不可安装'),(True,'可安装'))
 raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
-ks_choices = (('conf.ks','Centos6'),)
+ks_choices = (('conf.ks','Centos6'),('webserver.cfg','webserver'))
 stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
 netmask=(("255.255.255.0","24位"),("255.255.0.0","16位"))
 class disk_sotl(models.Model):
