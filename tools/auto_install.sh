@@ -26,8 +26,8 @@ RAID (){
     	HP_RAID
 	fi
 	DISK
-	IPMI ilo_ip lan
-	curl "http://127.0.0.0/install?ks=$ks&ksdev=$ksdev"
+	IPMI $ilo_ip $lan
+	curl "http://127.0.0.1/install?ks=$ks&ksdev=$ksdev"
 }
 DISK(){ 
 	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d : |head -n 1`

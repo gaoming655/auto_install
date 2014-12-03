@@ -25,7 +25,7 @@
 		//	alert(d.code);
 			if (d.code == 0){
 				$("#"+id).attr("disabled","disabled").val("安装中");
-				location.reload();
+				$("#e_"+id).attr("disabled","disabled").val("-----");
 			}
 			else {
 				$("#"+id).val("安装失败");
@@ -92,7 +92,7 @@
 			<td><button disabled="disabled" type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机">-----</button></td>
 			<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >安装中</button></td>
 		{% else %}
-			<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="{{i.id}}_e">Edit</button></td>
+			<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="e_{{i.id}}">Edit</button></td>
 			{% if i.raid_zh and i.service_ip and i.service_netmask and i.service_gw %}
 				<td><input  type="button" class="btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
 			{% else %}

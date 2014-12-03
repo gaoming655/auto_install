@@ -28,4 +28,4 @@ echo $disk >>info.json
 echo '}' >>info.json
 echo '}' >>info.json
 
-curl -X POST  -H 'content-type:application/json' -d @info.json   10.58.241.31/post/
+curl -X POST  -H 'content-type:application/json' -d @info.json   10.58.241.31:8080/post/

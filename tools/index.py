@@ -29,7 +29,7 @@ class Raid:
         ksdev = data.get("ksdev")
         ilo_ip = data.get('ilo_ip')
         lan = data.get('lan')
-        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"" % (disk,lv,tiaodai,ks,ksdev,ilq,lan))
+        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"" % (disk,lv,tiaodai,ks,ksdev,ilo_ip,lan))
         return json.dumps({'code':code,'msg':msg_dict[code]})
 class install():
     def GET(self):
@@ -38,7 +38,8 @@ class install():
         ksurl = "http://10.58.241.31/kickstart/%s" % ks
         ksdev = data.get("ksdev")
         grub_file = open("/mnt/boot/grub/grub.conf",'w')
-        grub_file.write(grub % (ksurl,ksdiv))
+        grub_file.write(grub % (ksurl,ksdev))
+        grub_file.close()
         return json.dumps({'code':0})
 class reboot():
     def GET(self):
