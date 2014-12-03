@@ -9,6 +9,10 @@ RAID (){
 	disk_list=$1
 	disk_lv=$2
 	tiaodai=$3
+	ks=$4
+	ksdev=$5
+	ilo_ip=$6
+	lan=$7
 	if [ $code -ne "0" ];then
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdDel -Lall -a0
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Cache -strpsz${tiaodai} -a0 
@@ -22,6 +26,8 @@ RAID (){
     	HP_RAID
 	fi
 	DISK
+	IPMI ilo_ip lan
+	curl "http://127.0.0.0/install?ks=$ks&ksdev=$ksdev"
 }
 DISK(){ 
 	sdx=`fdisk -l|grep 'Disk /dev/sd'|awk '{print $2}'|tr -d : |head -n 1`
@@ -57,10 +63,7 @@ key=$1
 case $key in
 	--raid)
 		shift
-		RAID $1 $2 $3
-		;;
-	--hpraid)
-		shift
+		RAID $1 $2 $3 $4 $5 $6 $7
 		;;
 	--ipmi)
 		shift

@@ -85,20 +85,18 @@ def start(request,echo_id):
         end_ks_file_content = ks_file_content.replace("nmip",s_ip).replace("nmnm",nk).replace("nmgw",gw)
         new_ks_file.write(end_ks_file_content)
         new_ks_file.close()
-        raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s" % (ip,lv,disk,tiaodai)
-        grub_url = "http://%s/install?ks=%s" % (ip,d.sn)
         ilo_list = ilo_table.objects.values('maunfacturer').iterator()
         reboot_url = "http://%s/reboot" % ip
         for i in ilo_list:
             if i['maunfacturer'] in inc:
-                lan = ilo_table.objects.get(maunfacturer=i['maunfacturer']).lan_num
+                get_pinpan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
+                lan = get_pinpan.lan_num
+                ksdev = get_pinpan.ksdev
                 break
-        ipmi_url = "http://%s/ipmi?lan=%s&ilo_ip=%s" % (ip,lan,ilo_ip)
+        raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s" % (ip,lv,disk,tiaodai,d.sn,ksdev,ilo_ip,lan)
         q = requests.get(raid_url)
         j = json.loads(q.text)
         if j['code'] == 0:
-            requests.get(grub_url)
-            requests.get(ipmi_url)
             requests.get(reboot_url)
             d.status=True
             d.save()
