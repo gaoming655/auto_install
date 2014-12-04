@@ -266,5 +266,5 @@ def get_eth_from_obj(f_id):
 
 def kickstart_file_url(request,get_ks_id):
     o = online.objects.get(id=int(get_ks_id))
-    return render(request,'ks/%s.ks' % o.kickstart,{'server':o})
+    return render(request,'ks/%s.cfg' % o.kickstart,{'server':o})
     

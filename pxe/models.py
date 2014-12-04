@@ -4,7 +4,7 @@ import datetime
 # Create your models here.
 raid_chose = ((False,'不可安装'),(True,'可安装'))
 raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
-ks_choices = (('conf.ks','Centos6'),('webserver.cfg','webserver'))
+ks_choices = (('conf','测试ks勿安装'),('webserver','webserver'))
 stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
 netmask=(("255.255.255.0","24位"),("255.255.0.0","16位"))
 IDC = (('10.10.10.10','惠普大厦'),('20.20.20.20','电信机房'))
@@ -38,7 +38,7 @@ class online(models.Model):
     sotl_total = models.IntegerField(max_length=3)
     stripe = models.IntegerField(max_length=10,default='1024',blank=False,choices=stripe_choices)
     raid_zh = models.CharField(max_length=200,)
-    kickstart = models.CharField(max_length=30,blank=False,default='conf.ks',choices=ks_choices)
+    kickstart = models.CharField(max_length=30,blank=False,default='webserver',choices=ks_choices)
     finish_status = models.BooleanField(default=False)
     jindu = models.IntegerField(max_length=3,default=0)
     idc_place = models.IPAddressField(default='10.10.10.10',choices=IDC)
