@@ -66,8 +66,6 @@ def exe_page(request):
 def start(request,echo_id):
     """点击开始"""
     if request.method == 'GET':
-        ks_path = "/var/www/html/"
-        new_ks_path = "/var/www/html/kickstart/"
         d = online.objects.get(id=int(echo_id))
         lv = d.level
         ip = d.ip
@@ -79,21 +77,15 @@ def start(request,echo_id):
         s_ip = d.service_ip
         nk = d.service_netmask
         gw = d.service_gw
-        #add service IP address
-        new_ks_file = open("%s%s" % (new_ks_path,d.sn), 'w')
-        ks_file_content = open("%s%s" % (ks_path,ks), 'r').read()
-        end_ks_file_content = ks_file_content.replace("nmip",s_ip).replace("nmnm",nk).replace("nmgw",gw)
-        new_ks_file.write(end_ks_file_content)
-        new_ks_file.close()
         ilo_list = ilo_table.objects.values('maunfacturer').iterator()
         reboot_url = "http://%s/reboot" % ip
         for i in ilo_list:
             if i['maunfacturer'] in inc:
-                get_pinpan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
-                lan = get_pinpan.lan_num
-                ksdev = get_pinpan.ksdev
+                get_pintan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
+                lan = get_pintan.lan_num
+                ksdev = get_pintan.ksdev
                 break
-        raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s" % (ip,lv,disk,tiaodai,d.sn,ksdev,ilo_ip,lan)
+        raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan)
         q = requests.get(raid_url)
         j = json.loads(q.text)
         if j['code'] == 0:
@@ -257,3 +249,22 @@ def get_jindu_from_db(request,get_id):
         jindu_val = d.jindu
         return HttpResponse(json.dumps({"val":jindu_val}))
         
+        
+
+def get_eth_from_obj(f_id):
+    o = online.objects.get(id=f_id)
+    inc = o.inc
+    ilo_list = ilo_table.objects.values('maunfacturer').iterator()
+    for i in ilo_list:
+        print i
+        if i['maunfacturer'] in inc:
+            get_pintan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
+            print get_pintan
+            kseth = get_pintan.ksdev
+            break    
+    return kseth
+
+def kickstart_file_url(request,get_ks_id):
+    o = online.objects.get(id=int(get_ks_id))
+    return render(request,'ks/%s.ks' % o.kickstart,{'server':o})
+    

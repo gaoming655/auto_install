@@ -35,7 +35,7 @@ class install():
     def GET(self):
         data = web.input()
         ks = data.get("ks")
-        ksurl = "http://10.58.241.31/kickstart/%s" % ks
+        ksurl = "http://10.58.241.31:8080/ks/%s" % ks
         ksdev = data.get("ksdev")
         grub_file = open("/mnt/boot/grub/grub.conf",'w')
         grub_file.write(grub % (ksurl,ksdev))

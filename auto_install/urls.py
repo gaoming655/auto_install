@@ -25,3 +25,8 @@ urlpatterns = patterns('',
     url(r'^delivery/(?P<obj_id>\d+)',delivery),
     url(r'^admin/', include(admin.site.urls)),
 )
+
+
+urlpatterns += patterns('',
+    url(r'^ks/(?P<get_ks_id>\d+)',kickstart_file_url),
+)

@@ -7,6 +7,7 @@ raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
 ks_choices = (('conf.ks','Centos6'),('webserver.cfg','webserver'))
 stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
 netmask=(("255.255.255.0","24位"),("255.255.0.0","16位"))
+IDC = (('10.10.10.10','惠普大厦'),('20.20.20.20','电信机房'))
 class disk_sotl(models.Model):
     sotl = models.IntegerField(max_length=2)
     size = models.CharField(max_length=10)
@@ -40,6 +41,7 @@ class online(models.Model):
     kickstart = models.CharField(max_length=30,blank=False,default='conf.ks',choices=ks_choices)
     finish_status = models.BooleanField(default=False)
     jindu = models.IntegerField(max_length=3,default=0)
+    idc_place = models.IPAddressField(default='10.10.10.10',choices=IDC)
     def __unicode__(self):
         return "%s" % self.ip
     
