@@ -7,7 +7,7 @@ raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
 ks_choices = (('conf','测试ks勿安装'),('webserver','webserver'))
 stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
 netmask=(("255.255.255.0","24位"),("255.255.0.0","16位"))
-IDC = (('10.10.10.10','惠普大厦'),('20.20.20.20','电信机房'),('10.100.91.39','互联通'))
+IDC = (('10.10.10.10','惠普大厦'),('20.20.20.20','电信机房'),('10.100.90.52','互联通'))
 class disk_sotl(models.Model):
     sotl = models.IntegerField(max_length=2)
     size = models.CharField(max_length=10)
