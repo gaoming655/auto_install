@@ -224,12 +224,8 @@ def finish_api(request):
 @login_required(login_url="/")
 def delivery(request,obj_id):
     if request.method == "GET":
-        ks_del_file_path = "/var/www/html/kickstart/"
         o = get_object_or_404(online,id=obj_id)
-        get_sn = o.sn
-        os.remove("%s%s" % (ks_del_file_path,get_sn))
-        o.delete()
-        
+        o.delete()        
         return HttpResponseRedirect('/his/')
 
 @csrf_exempt
