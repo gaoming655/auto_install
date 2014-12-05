@@ -4,6 +4,8 @@ mem=`facter memorysize`
 cpu=`facter processor0`
 inc=`facter manufacturer`
 sn=`facter serialnumber`
+#add server ip
+server_ip="10.58.241.31"
 echo $inc |grep "HP" >/dev/null
 code=$?
 if [ $code -ne 0 ];then 
@@ -28,4 +30,4 @@ echo $disk >>info.json
 echo '}' >>info.json
 echo '}' >>info.json
 
-curl -X POST  -H 'content-type:application/json' -d @info.json   10.58.241.31:8080/post/
+curl -X POST  -H 'content-type:application/json' -d @info.json   ${server_ip}/post/

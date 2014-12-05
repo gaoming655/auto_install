@@ -263,3 +263,14 @@ def get_eth_from_obj(f_id):
 def kickstart_file_url(request,get_ks_id):
     o = online.objects.get(id=int(get_ks_id))
     return render(request,'ks/%s.cfg' % o.kickstart,{'server':o})
+
+
+def download_file(request,file_name):
+    base_dir = os.path.join(os.path.dirname(__file__),'../tools/').replace('\\','/')
+    f = open(base_dir+file_name,'rb')
+    file_content = f.read()
+    f.close()
+    r = HttpResponse(file_content,content_type='application/octet-stream')
+    r['Content-Disposition'] = 'attachment; filename=%s' % file_name
+    return r
+    

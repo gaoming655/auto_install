@@ -1,3 +1,4 @@
+#coding=utf-8
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from pxe.views import *
@@ -26,7 +27,12 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 )
 
-
+# ks file download
 urlpatterns += patterns('',
     url(r'^ks/(?P<get_ks_id>\d+)',kickstart_file_url),
+)
+
+# Api file download for memos
+urlpatterns += patterns('',
+    url(r'^(?P<file_name>auto_install.sh|index.py|post.sh)$',download_file),
 )

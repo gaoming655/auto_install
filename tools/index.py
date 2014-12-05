@@ -36,7 +36,7 @@ class install():
         dhcp="192.168.211.1"
         data = web.input()
         ks = data.get("ks")
-        ksurl = "http://%s:8080/ks/%s" % (dhcp,ks)
+        ksurl = "http://%s/ks/%s" % (dhcp,ks)
         ksdev = data.get("ksdev")
         grub_file = open("/mnt/boot/grub/grub.conf",'w')
         grub_file.write(grub % (ksurl,ksdev))
