@@ -3,6 +3,7 @@ from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,Http404,HttpResponseRedirect
 from django.contrib.auth import login,logout,authenticate
 from forms import *
+from auto_install.settings import server_ip,content_ip
 from django.contrib.auth.decorators import login_required
 import requests
 import json
@@ -262,7 +263,7 @@ def get_eth_from_obj(f_id):
 
 def kickstart_file_url(request,get_ks_id):
     o = online.objects.get(id=int(get_ks_id))
-    return render(request,'ks/%s.cfg' % o.kickstart,{'server':o})
+    return render(request,'ks/%s.cfg' % o.kickstart,{'server':o,'server_ip':server_ip,'content_ip':content_ip})
 
 
 def download_file(request,file_name):
@@ -270,6 +271,8 @@ def download_file(request,file_name):
     f = open(base_dir+file_name,'rb')
     file_content = f.read()
     f.close()
+    if file_name == 'post.sh':
+        file_content = file_content.replace('@@server__ip@@', server_ip)
     r = HttpResponse(file_content,content_type='application/octet-stream')
     r['Content-Disposition'] = 'attachment; filename=%s' % file_name
     return r
