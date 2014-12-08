@@ -247,7 +247,7 @@ def his_page(request):
 def finish_api(request):
     if request.method == "POST":
         dip = request.META['REMOTE_ADDR']
-        dsn = request.POST['sn']
+        dsn = request.POST['sn'].strip()
         online.objects.filter(service_ip=dip,sn=dsn).update(finish_status=True)
         return HttpResponse(json.dumps({'code':0}))
 

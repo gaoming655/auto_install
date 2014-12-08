@@ -42,7 +42,7 @@ DISK(){
 }
 
 HP_RAID(){
-	slot=`hpacucli ctrl all show |awk '{print $6}'`
+	slot=`hpacucli ctrl all show |awk '{print $6}'|grep -v '^$'`
 	hpacucli ctrl slot=${slot} array A delete forced
 	hpacucli ctrl slot=${slot} create type=ld drives=${disk_list} raid=${disk_lv} stripesize=${tiaodai}
 }
