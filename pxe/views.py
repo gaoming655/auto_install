@@ -9,8 +9,11 @@ import requests
 import json
 from django.views.decorators.csrf import csrf_exempt
 import os
+import re
 # Create your views here.
 
+# Validation IP address is True
+rc = re.compile(r'^((?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[0-9]{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[0-9]{1,2})))$')
 def login_view(request):
     """用户登录认证"""
     if  request.method == 'POST':
@@ -152,28 +155,54 @@ def edit(request,obj_id):
         d = request.POST
         level = d.get("level")
         disk =  d.getlist("disk_zh")
-        ilo_ip = d.get("ilo_ip",None)
+        ilo_ip = d.get("ilo_ip",None).strip()
         ks = d.get("kickstart")
         tiaodai = d.get("stripe")
-        sip = d.get("service_ip")
+        sip = d.get("service_ip").strip()
         snk = d.get("service_netmask")
-        sgw = d.get("service_gw")
+        sgw = d.get("service_gw").strip()
         obj = online.objects.get(id=int(obj_id))
         obj.level = level
-        obj.service_ip = sip
         obj.service_netmask = snk
-        obj.service_gw = sgw
         sotl = obj.sotl_total
         obj.kickstart = ks
         incd = obj.inc
+        obj.stripe = tiaodai
+        print rc.findall(ilo_ip)
+        if  len(rc.findall(sip)) == 1:
+            obj.service_ip = sip
+        else:
+            obj.service_ip = ""
+        if len(rc.findall(sgw)) == 1:
+            obj.service_gw = sgw
+        else:
+            obj.service_gw = ""
+        if len(rc.findall(ilo_ip)) == 1:
+            obj.ilo_ip = ilo_ip
+        else:
+            obj.ilo_ip = ""
+        int_level = int(level)
+        if int_level == 1:
+            if  len(disk)%2:
+                obj.raid_zh = ""
+                obj.save()
+                return HttpResponseRedirect("/exe/")
+        elif int_level == 5:
+            if len(disk) < 3:
+                obj.raid_zh = ""
+                obj.save()
+                return HttpResponseRedirect("/exe/")                
+        elif int_level == 10:
+            if  len(disk)%2:
+                obj.raid_zh = ""
+                obj.save()
+                return HttpResponseRedirect("/exe/") 
         if "HP" not in  incd:
             for i in disk:
                 dl.append(str(sotl)+":"+str(i))
                 obj.raid_zh = "[" + ",".join(dl) + "]"
         else:
             obj.raid_zh = ",".join(disk)
-        obj.stripe = tiaodai
-        obj.ilo_ip = ilo_ip
         obj.save()
         return HttpResponseRedirect("/exe/")
 @csrf_exempt

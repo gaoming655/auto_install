@@ -12,13 +12,17 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# edit your server_ip  and content_ip 
+# Edit your server_ip  and content_ip  [ip:port]
+# If has port, you must change file ../tools/index.py  class install() $port value.
 server_ip = "10.58.241.31"
+
 content_ip = "10.58.241.31"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# The secret_key value is "123456"
 SECRET_KEY = 'a#o7z=eg(8_zj5cwxp1!25+)_-4673t+$ian7w&xnp%6izd9=2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
