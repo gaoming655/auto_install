@@ -12,7 +12,7 @@ class login_form(forms.Form):
 class edit_form(forms.ModelForm):
     class Meta:
         model = online
-        fields = ('ilo_ip','ilo_netmask','ilo_gw','level','kickstart','stripe','service_ip','service_netmask','service_gw')
+        fields = ('ilo_ip','ilo_netmask','ilo_gw','level','kickstart','stripe','service_ip','service_netmask','service_gw','eth')
         widgets ={
             'ilo_ip':forms.TextInput(attrs={'class':'form-control'}),
             'service_ip':forms.TextInput(attrs={'class':'form-control'}),

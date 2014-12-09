@@ -162,12 +162,14 @@ def edit(request,obj_id):
         ilo_ip = d.get("ilo_ip",None).strip()
         ilo_netmask = d.get("ilo_netmask")
         ilo_gw = d.get("ilo_gw",None).strip()
+        eth = d.get('eth')
         ks = d.get("kickstart")
         tiaodai = d.get("stripe")
         sip = d.get("service_ip").strip()
         snk = d.get("service_netmask")
         sgw = d.get("service_gw").strip()
         obj = online.objects.get(id=int(obj_id))
+        obj.eth = eth
         obj.level = level
         obj.service_netmask = snk
         sotl = obj.sotl_total

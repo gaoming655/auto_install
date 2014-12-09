@@ -36,8 +36,12 @@ $(document).ready(function() {
 				<td colspan=2 align="center" style="background-color: #ADADAD">分割线</td>
 			</tr>
 			<tr>
-				<th>*业务IP(目前只作用于eth0)*</th>
+				<th>*业务IP*</th>
 				<td>{{forms.service_ip}}</td>
+			</tr>
+			<tr>
+				<th>选择网卡</th>
+				<td>{{forms.eth}}</td>
 			</tr>
 			<tr>
 				<th>业务子网掩码</th>

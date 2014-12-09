@@ -3,6 +3,7 @@ from django.db import models
 import datetime
 # Create your models here.
 raid_chose = ((False,'不可安装'),(True,'可安装'))
+ETH = (('eth0','eth0'),('eth1','eth1'))
 raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
 ks_choices = (('conf','测试ks勿安装'),('webserver','webserver'))
 stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
@@ -46,6 +47,7 @@ class online(models.Model):
     finish_status = models.BooleanField(default=False)
     jindu = models.IntegerField(max_length=3,default=0)
     idc_place = models.IPAddressField(default='10.10.10.10',choices=IDC)
+    eth = models.CharField(max_length=10,choices=ETH,default='eth0',blank=False)
     def __unicode__(self):
         return "%s" % self.ip
     
