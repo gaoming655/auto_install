@@ -35,7 +35,7 @@ class online(models.Model):
     service_netmask = models.CharField(max_length=30,choices=netmask,default="255.255.255.0",blank=False)
     service_gw = models.IPAddressField(null=True,blank=True)
     ilo_ip = models.IPAddressField(null=True,blank=True)
-    ilo_netmask = models.CharField(max_length=30,choices=netmask,default="255.255.0.0",blank=False)
+    ilo_netmask = models.CharField(max_length=30,choices=netmask,default="255.255.0.0",blank=False,null=True)
     ilo_gw = models.IPAddressField(null=True,blank=True)    
     status = models.BooleanField(default=False)
     inc = models.CharField(max_length=30)
