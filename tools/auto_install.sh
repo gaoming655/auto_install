@@ -13,6 +13,8 @@ RAID (){
 	ksdev=$5
 	ilo_ip=$6
 	lan=$7
+	ilo_netmask=$8
+	ilo_gw=$9
 	if [ $code -ne "0" ];then
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdDel -Lall -a0
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Cache -strpsz${tiaodai} -a0 
@@ -26,7 +28,7 @@ RAID (){
     	HP_RAID
 	fi
 	DISK
-	IPMI $ilo_ip $lan
+	IPMI $ilo_ip $lan $ilo_netmask $ilo_gw
 	curl "http://127.0.0.1/install?ks=$ks&ksdev=$ksdev"
 }
 DISK(){ 
@@ -49,10 +51,11 @@ HP_RAID(){
 IPMI(){
 	ip=$1
 	lan=$2
-	gw=${ip%.*}.1
+	nk=$3
+	gw=$4
 	ipmitool lan set $lan ipsrc static 
 	ipmitool lan set $lan ipaddr $ip
-	ipmitool lan set $lan netmask 255.255.255.0
+	ipmitool lan set $lan netmask $nk
 	ipmitool lan set $lan defgw ipaddr  $gw
 	if [ $code -eq "0" ];then
 		ipmitool  user set   password 1 @qiugaoqs123

@@ -25,7 +25,18 @@ $(document).ready(function() {
 				<td>{{forms.ilo_ip}}</td>
 			</tr>
 			<tr>
-				<th>业务IP</th>
+				<th>管理卡子网掩码</th>
+				<td>{{forms.ilo_netmask}}</td>
+			</tr>
+			<tr>
+				<th>管理卡网关</th>
+				<td>{{forms.ilo_gw}}</td>
+			</tr>
+			<tr>
+				<td colspan=2 align="center" style="background-color: #ADADAD">分割线</td>
+			</tr>
+			<tr>
+				<th>*业务IP(目前只作用于eth0)*</th>
 				<td>{{forms.service_ip}}</td>
 			</tr>
 			<tr>

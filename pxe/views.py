@@ -77,6 +77,8 @@ def start(request,echo_id):
         ks = d.kickstart
         tiaodai = d.stripe
         ilo_ip = d.ilo_ip
+        ilo_netmask = d.ilo_netmask
+        ilo_gw = d.ilo_gw
         inc = d.inc
         s_ip = d.service_ip
         nk = d.service_netmask
@@ -89,7 +91,7 @@ def start(request,echo_id):
                 lan = get_pintan.lan_num
                 ksdev = get_pintan.ksdev
                 break
-        raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan)
+        raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
         q = requests.get(raid_url)
         j = json.loads(q.text)
         if j['code'] == 0:
@@ -128,7 +130,9 @@ def online_view(request,obj_id):
     snd = d.sn
     channel = d.sotl
     dilo_ip = d.ilo_ip
-    obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel,ilo_ip=dilo_ip,)
+    dilo_netmask = d.ilo_netmask
+    dilo_gw = d.ilo_gw
+    obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw)
     obj.save()
     d.delete()
     if "HP" not in incd:
@@ -156,6 +160,8 @@ def edit(request,obj_id):
         level = d.get("level")
         disk =  d.getlist("disk_zh")
         ilo_ip = d.get("ilo_ip",None).strip()
+        ilo_netmask = d.get("ilo_netmask")
+        ilo_gw = d.get("ilo_gw",None).strip()
         ks = d.get("kickstart")
         tiaodai = d.get("stripe")
         sip = d.get("service_ip").strip()
@@ -168,7 +174,6 @@ def edit(request,obj_id):
         obj.kickstart = ks
         incd = obj.inc
         obj.stripe = tiaodai
-        print rc.findall(ilo_ip)
         if  len(rc.findall(sip)) == 1:
             obj.service_ip = sip
         else:
@@ -181,6 +186,10 @@ def edit(request,obj_id):
             obj.ilo_ip = ilo_ip
         else:
             obj.ilo_ip = ""
+        if len(rc.findall(ilo_gw)) == 1:
+            obj.ilo_gw = ilo_gw
+        else:
+            obj.ilo_gw = ""      
         int_level = int(level)
         if int_level == 1:
             if  len(disk)%2:
@@ -219,7 +228,9 @@ def register_post(request):
         dsotl = d.get('sotl')
         disk = d.get('disk')
         dilo_ip = d.get('ilo_ip',None)
-        obj = install(inc=dinc,ipaddr=ip,cpu=dcpu,mem=dmem,sotl=dsotl,sn=dsn,ilo_ip=dilo_ip)
+        dilo_netmask = d.get('ilo_netmask',None)
+        dilo_gw = d.get('ilo_gw',None)
+        obj = install(inc=dinc,ipaddr=ip,cpu=dcpu,mem=dmem,sotl=dsotl,sn=dsn,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw)
         obj.save()
         install_id = obj.id
         print dinc
@@ -300,8 +311,6 @@ def download_file(request,file_name):
     f = open(base_dir+file_name,'rb')
     file_content = f.read()
     f.close()
-    if file_name == 'post.sh':
-        file_content = file_content.replace('@@server__ip@@', server_ip)
     r = HttpResponse(file_content,content_type='application/octet-stream')
     r['Content-Disposition'] = 'attachment; filename=%s' % file_name
     return r

@@ -14,10 +14,14 @@ else
 	sotl=`hpacucli  ctrl all show  |awk '{print $6}'|grep -v '^$'`
 	disk=`hpacucli  ctrl  slot=$sotl  pd all show|awk '{print "\""$2"\"","@","\""$8$9"\"" ","}'|grep ':'|sed -e 's/,//' -e 's/@/:/'|sed '$s/,//'`
 fi
-ilo_ip=`ipmitool  lan print |grep  'IP Address [^Source]' |awk '{print $4}'`
+ilo_ip=`ipmitool  lan print |grep  'IP Address [^Source]' |awk '{print $NF}'`
+ilo_netmask=`ipmitool  lan print|grep 'Subnet Mask'|awk '{print $NF}'`
+ilo_gw=`ipmitool  lan print|grep 'Default Gateway IP'|awk '{print $NF}'`
 echo '{' > info.json
 echo "\"ip\":\"$ip\",">>info.json
 echo "\"ilo_ip\":\"$ilo_ip\",">>info.json
+echo "\"ilo_netmask\":\"$ilo_netmask\",">>info.json
+echo "\"ilo_gw\":\"$ilo_gw\",">>info.json
 echo "\"mem\":\"$mem\",">>info.json
 echo "\"cpu\":\"$cpu\",">>info.json
 echo "\"sn\":\"$sn\",">>info.json
@@ -29,4 +33,4 @@ echo $disk >>info.json
 echo '}' >>info.json
 echo '}' >>info.json
 
-curl -X POST  -H 'content-type:application/json' -d @info.json   http://@@server__ip@@/post/
+curl -X POST  -H 'content-type:application/json' -d @info.json   http://192.168.211.1/post/

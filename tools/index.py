@@ -29,7 +29,9 @@ class Raid:
         ksdev = data.get("ksdev")
         ilo_ip = data.get('ilo_ip')
         lan = data.get('lan')
-        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"" % (disk,lv,tiaodai,ks,ksdev,ilo_ip,lan))
+        ilo_netmask = data.get('ilo_netmask')
+        ilo_gw = data.get('ilo_gw')
+        code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"" % (disk,lv,tiaodai,ks,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw))
         return json.dumps({'code':code,'msg':msg_dict[code]})
 class install():
     def GET(self):

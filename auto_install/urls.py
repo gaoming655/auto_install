@@ -3,6 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from pxe.views import *
 from django.views.generic.base import RedirectView
+from django.conf import settings
 admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
