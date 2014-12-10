@@ -83,13 +83,13 @@ def start(request,echo_id):
         s_ip = d.service_ip
         nk = d.service_netmask
         gw = d.service_gw
+        ksdev = d.ksdev
         ilo_list = ilo_table.objects.values('maunfacturer').iterator()
         reboot_url = "http://%s/reboot" % ip
         for i in ilo_list:
             if i['maunfacturer'] in inc:
                 get_pintan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
                 lan = get_pintan.lan_num
-                ksdev = get_pintan.ksdev
                 break
         raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
         q = requests.get(raid_url)
@@ -132,7 +132,8 @@ def online_view(request,obj_id):
     dilo_ip = d.ilo_ip
     dilo_netmask = d.ilo_netmask
     dilo_gw = d.ilo_gw
-    obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw)
+    dksdev = d.ksdev
+    obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw,ksdev=dksdev)
     obj.save()
     d.delete()
     if "HP" not in incd:
@@ -222,17 +223,18 @@ def register_post(request):
     if request.method == "POST":
         d = request.body
         d = json.loads(d)
-        dmem = d.get('mem')
-        dcpu = d.get('cpu')
-        dinc = d.get('inc')
-        dsn = d.get('sn')
+        dmem = d.get('mem').strip()
+        dcpu = d.get('cpu').strip()
+        dinc = d.get('inc').strip()
+        dsn = d.get('sn').strip()
         ip = d.get('ip')
         dsotl = d.get('sotl')
         disk = d.get('disk')
         dilo_ip = d.get('ilo_ip',None)
         dilo_netmask = d.get('ilo_netmask',None)
         dilo_gw = d.get('ilo_gw',None)
-        obj = install(inc=dinc,ipaddr=ip,cpu=dcpu,mem=dmem,sotl=dsotl,sn=dsn,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw)
+        dksdev = d.get('ksdev').strip()
+        obj = install(inc=dinc,ipaddr=ip,cpu=dcpu,mem=dmem,sotl=dsotl,sn=dsn,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw,ksdev=dksdev)
         obj.save()
         install_id = obj.id
         print dinc

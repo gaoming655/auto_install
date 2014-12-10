@@ -17,11 +17,13 @@ fi
 ilo_ip=`ipmitool  lan print |grep  'IP Address [^Source]' |awk '{print $NF}'`
 ilo_netmask=`ipmitool  lan print|grep 'Subnet Mask'|awk '{print $NF}'`
 ilo_gw=`ipmitool  lan print|grep 'Default Gateway IP'|awk '{print $NF}'`
+for i in eth{0..4};do facter  ipaddress_$i |grep '192.168.211' && ksdev=$i;done
 echo '{' > info.json
 echo "\"ip\":\"$ip\",">>info.json
 echo "\"ilo_ip\":\"$ilo_ip\",">>info.json
 echo "\"ilo_netmask\":\"$ilo_netmask\",">>info.json
 echo "\"ilo_gw\":\"$ilo_gw\",">>info.json
+echo "\"ksdev\":\"$ksdev\",">>info.json
 echo "\"mem\":\"$mem\",">>info.json
 echo "\"cpu\":\"$cpu\",">>info.json
 echo "\"sn\":\"$sn\",">>info.json

@@ -8,7 +8,6 @@ raid_level = ((1,'raid1'),(0,'raid0'),(5,'raid5'))
 ks_choices = (('conf','测试ks勿安装'),('webserver','webserver'))
 stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
 netmask=(("255.255.0.0","255.255.0.0"),("255.255.255.0","255.255.255.0"),('255.255.255.128','255.255.255.128'),('255.255.255.192','255.255.255.192'),('255.255.255.224','255.255.255.224'),('255.255.255.240','255.255.255.240'))
-IDC = (('10.10.10.10','惠普大厦'),('20.20.20.20','电信机房'),('10.100.90.52','互联通'))
 class disk_sotl(models.Model):
     sotl = models.IntegerField(max_length=2)
     size = models.CharField(max_length=10)
@@ -26,6 +25,7 @@ class install(models.Model):
     cpu = models.CharField(max_length=100,)
     mem = models.CharField(max_length=20,)
     sotl = models.CharField(max_length=5)
+    ksdev = models.CharField(max_length=10)
     def __unicode__(self):
         return "%s " % self.ipaddr
 class online(models.Model):
@@ -46,15 +46,14 @@ class online(models.Model):
     kickstart = models.CharField(max_length=30,blank=False,default='webserver',choices=ks_choices)
     finish_status = models.BooleanField(default=False)
     jindu = models.IntegerField(max_length=3,default=0)
-    idc_place = models.IPAddressField(default='10.10.10.10',choices=IDC)
     eth = models.CharField(max_length=10,choices=ETH,default='eth0',blank=False)
+    ksdev = models.CharField(max_length=10)
     def __unicode__(self):
         return "%s" % self.ip
     
 class ilo_table(models.Model):
     maunfacturer = models.CharField(max_length=100,)
     lan_num = models.IntegerField(max_length=10,)
-    ksdev = models.CharField(max_length=10)
     def __unicode__(self):
         return "%s" % self.maunfacturer
     
