@@ -313,6 +313,8 @@ def download_file(request,file_name):
     f = open(base_dir+file_name,'rb')
     file_content = f.read()
     f.close()
+    if file_name == "post.sh" or file_name == "index.py":
+        file_content = file_content.replace("@@server_ip@@", server_ip)
     r = HttpResponse(file_content,content_type='application/octet-stream')
     r['Content-Disposition'] = 'attachment; filename=%s' % file_name
     return r

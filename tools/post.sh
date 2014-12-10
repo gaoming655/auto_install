@@ -33,4 +33,4 @@ echo $disk >>info.json
 echo '}' >>info.json
 echo '}' >>info.json
 
-curl -X POST  -H 'content-type:application/json' -d @info.json   http://192.168.211.1/post/
+curl -X POST  -H 'content-type:application/json' -d @info.json   http://@@server_ip@@/post/

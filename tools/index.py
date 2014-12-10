@@ -35,8 +35,7 @@ class Raid:
         return json.dumps({'code':code,'msg':msg_dict[code]})
 class install():
     def GET(self):
-        port = "8080"
-        dhcp="192.168.211.1:%s" % port
+        dhcp="@@server_ip@@"
         data = web.input()
         ks = data.get("ks")
         ksurl = "http://%s/ks/%s" % (dhcp,ks)
