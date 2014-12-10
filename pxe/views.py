@@ -259,9 +259,8 @@ def his_page(request):
 @csrf_exempt
 def finish_api(request):
     if request.method == "POST":
-        dip = request.META['REMOTE_ADDR']
         dsn = request.POST['sn'].strip()
-        online.objects.filter(service_ip=dip,sn=dsn).update(finish_status=True)
+        online.objects.filter(sn=dsn).update(finish_status=True)
         return HttpResponse(json.dumps({'code':0}))
 
 @login_required(login_url="/")
