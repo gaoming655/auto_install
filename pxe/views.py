@@ -106,7 +106,7 @@ def del_obj(request,obj_id):
     """删除误重启的机器"""
     if request.method == "GET":
         obj = install.objects.get(id=int(obj_id)).delete()
-        disk_sotl.objects.filter(id=int(obj_id)).delete()
+        disk_sotl.objects.filter(host_id=int(obj_id)).delete()
         return HttpResponseRedirect('/find/')
 @login_required(login_url="/")
 def lock_obj(request,obj_id,obj_code):
@@ -257,7 +257,7 @@ def delivery(request,obj_id):
     if request.method == "GET":
         o = get_object_or_404(online,id=obj_id)
         o.delete()
-        disk_sotl.objects.filter(id=int(obj_id)).delete()
+        disk_sotl.objects.filter(host_id=int(obj_id)).delete()
         return HttpResponseRedirect('/his/')
 
 @csrf_exempt
