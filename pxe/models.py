@@ -54,7 +54,7 @@ class online(models.Model):
 class ilo_table(models.Model):
     maunfacturer = models.CharField(max_length=100,)
     lan_num = models.IntegerField(max_length=10,)
-    ksdev = models.CharField(max_length=5)
+    ksdev = models.CharField(max_length=10)
     def __unicode__(self):
         return "%s" % self.maunfacturer
     
