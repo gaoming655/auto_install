@@ -256,7 +256,8 @@ def finish_api(request):
 def delivery(request,obj_id):
     if request.method == "GET":
         o = get_object_or_404(online,id=obj_id)
-        o.delete()        
+        o.delete()
+        disk_sotl.objects.filter(id=int(obj_id)).delete()
         return HttpResponseRedirect('/his/')
 
 @csrf_exempt
