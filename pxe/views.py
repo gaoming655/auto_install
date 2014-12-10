@@ -50,10 +50,7 @@ def info(request,info_id):
     """主机详情"""
     if request.method == "GET":
         machine_info = install.objects.get(id = int(info_id))
-        if "HP" not in machine_info.inc:
-            disk_list = disk_sotl.objects.filter(host_id=int(info_id))
-        else:
-            disk_list = disk_hp.objects.filter(host_id=int(info_id))
+        disk_list = disk_sotl.objects.filter(host_id=int(info_id))      
         return render(request,"info.html",{"forms":machine_info,'dd': disk_list})
 
 #----------------------------------------------------------------------
@@ -109,6 +106,7 @@ def del_obj(request,obj_id):
     """删除误重启的机器"""
     if request.method == "GET":
         obj = install.objects.get(id=int(obj_id)).delete()
+        disk_sotl.objects.filter(id=int(obj_id)).delete()
         return HttpResponseRedirect('/find/')
 @login_required(login_url="/")
 def lock_obj(request,obj_id,obj_code):
@@ -136,10 +134,7 @@ def online_view(request,obj_id):
     obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw,ksdev=dksdev)
     obj.save()
     d.delete()
-    if "HP" not in incd:
-        disk_sotl.objects.filter(host_id=install_id).update(host_id=obj.id)
-    else:
-        disk_hp.objects.filter(host_id=install_id).update(host_id=obj.id)
+    disk_sotl.objects.filter(host_id=install_id).update(host_id=obj.id)
     return HttpResponseRedirect("/find/")
 
 @login_required(login_url="/")
@@ -148,10 +143,7 @@ def edit(request,obj_id):
     if request.method == "GET":
         obj = online.objects.get(id=int(obj_id))
         f = edit_form(instance=obj)
-        if "HP" not in obj.inc:
-            disk_list = disk_sotl.objects.filter(host_id=obj_id).order_by("sotl")
-        else:
-            disk_list = disk_hp.objects.filter(host_id=obj_id).order_by("sotl")
+        disk_list = disk_sotl.objects.filter(host_id=obj_id).order_by("sotl")
         if not disk_list:
             disk_list=None
         return render(request,"edit.html",{"forms":f,"disk":disk_list,"id":obj_id})
@@ -238,16 +230,11 @@ def register_post(request):
         obj.save()
         install_id = obj.id
         print dinc
-        if  "HP" not in dinc:
-            for k,v in disk.items():
-                dso = disk_sotl(sotl=int(k),size=v,host_id=install_id)
-                dso.save()
-                dso = None
-        else:
-            for k,v in disk.items():
-                hpdso = disk_hp(sotl=k,size=v,host_id=install_id)
-                hpdso.save()
-                hpdso = None
+        for k,v in disk.items():
+            dso = disk_sotl(sotl=int(k),size=v,host_id=install_id)
+            dso.save()
+            dso = None
+
     return HttpResponse(json.dumps({"code":0}))
 
 @login_required(login_url="/")

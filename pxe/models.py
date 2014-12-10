@@ -9,9 +9,9 @@ ks_choices = (('conf','测试ks勿安装'),('webserver','webserver'))
 stripe_choices = ((1024,'1M'),(512,'512K'),(128,'128K'),(64,'64K'))
 netmask=(("255.255.0.0","255.255.0.0"),("255.255.255.0","255.255.255.0"),('255.255.255.128','255.255.255.128'),('255.255.255.192','255.255.255.192'),('255.255.255.224','255.255.255.224'),('255.255.255.240','255.255.255.240'))
 class disk_sotl(models.Model):
-    sotl = models.IntegerField(max_length=2)
-    size = models.CharField(max_length=10)
-    host_id = models.IntegerField(max_length=20)
+    sotl = models.CharField(max_length=20)
+    size = models.CharField(max_length=20)
+    host_id = models.IntegerField(max_length=10,)
     
 class install(models.Model):
     inc = models.CharField(max_length=30)
@@ -56,8 +56,3 @@ class ilo_table(models.Model):
     lan_num = models.IntegerField(max_length=10,)
     def __unicode__(self):
         return "%s" % self.maunfacturer
-    
-class disk_hp(models.Model):
-    sotl = models.CharField(max_length=20,)
-    size = models.CharField(max_length=20,)
-    host_id = models.IntegerField(max_length=10,)
