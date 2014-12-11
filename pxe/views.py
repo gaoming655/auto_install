@@ -142,12 +142,16 @@ def edit(request,obj_id):
     """编辑需要安装的机器"""
     if request.method == "GET":
         obj = online.objects.get(id=int(obj_id))
+        if obj.status:
+            return HttpResponse("<script>alert('已经开始安装无法编辑');window.location.href='/exe/';</script>")
         f = edit_form(instance=obj)
         disk_list = disk_sotl.objects.filter(host_id=obj_id).order_by("sotl")
         if not disk_list:
             disk_list=None
         return render(request,"edit.html",{"forms":f,"disk":disk_list,"id":obj_id})
     elif request.method == "POST":
+        if obj.status:
+            return HttpResponse("<script>alert('已经开始安装无法编辑');window.location.href='/exe/';</script>")   
         dl = []
         d = request.POST
         level = d.get("level")
@@ -185,7 +189,7 @@ def edit(request,obj_id):
             obj.ilo_gw = ilo_gw
         else:
             obj.ilo_gw = ""      
-        int_level = int(level)
+        int_level = int(level)       
         if int_level == 1:
             if  len(disk)%2:
                 obj.raid_zh = ""
@@ -308,3 +312,6 @@ def download_file(request,file_name):
     r['Content-Disposition'] = 'attachment; filename=%s' % file_name
     return r
     
+def ping(request,ping_id):
+    if request.mothod == "GET":
+        return HttpResponseRedirect('/exe/')

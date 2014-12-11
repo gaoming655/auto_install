@@ -32,7 +32,7 @@ class Raid:
         ilo_netmask = data.get('ilo_netmask')
         ilo_gw = data.get('ilo_gw')
         code = os.system("/bin/sh /root/auto_install.sh --raid \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"" % (disk,lv,tiaodai,ks,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw))
-        return json.dumps({'code':code,'msg':msg_dict[code]})
+        return json.dumps({'code':code})
 class install():
     def GET(self):
         dhcp="@@server_ip@@"

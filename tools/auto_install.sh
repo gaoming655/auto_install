@@ -15,20 +15,22 @@ RAID (){
 	lan=$7
 	ilo_netmask=$8
 	ilo_gw=$9
+	IPMI $ilo_ip $lan $ilo_netmask $ilo_gw
 	if [ $code -ne "0" ];then
 		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdDel -Lall -a0
-		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Cache -strpsz${tiaodai} -a0 
+		/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Cached -strpsz${tiaodai} -a0 
 		xcode=$?
 		if [ $xcode -ne "0" ];then
 			/opt/MegaRAID/MegaCli/MegaCli64 -CfgLdAdd -r${disk_lv} $disk_list WB Direct -strpsz${tiaodai} -a0
-		else
-			exit 10
+			ecode=$?
+			if [ $ecode -ne "0" ];then
+				exit 3
+			fi
         fi
     else 
     	HP_RAID
 	fi
 	DISK
-	IPMI $ilo_ip $lan $ilo_netmask $ilo_gw
 	curl "http://127.0.0.1/install?ks=$ks&ksdev=$ksdev"
 }
 DISK(){ 
