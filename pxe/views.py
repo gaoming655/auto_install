@@ -150,6 +150,7 @@ def edit(request,obj_id):
             disk_list=None
         return render(request,"edit.html",{"forms":f,"disk":disk_list,"id":obj_id})
     elif request.method == "POST":
+        obj = online.objects.get(id=int(obj_id))
         if obj.status:
             return HttpResponse("<script>alert('已经开始安装无法编辑');window.location.href='/exe/';</script>")   
         dl = []
@@ -165,7 +166,6 @@ def edit(request,obj_id):
         sip = d.get("service_ip").strip()
         snk = d.get("service_netmask")
         sgw = d.get("service_gw").strip()
-        obj = online.objects.get(id=int(obj_id))
         obj.eth = eth
         obj.level = level
         obj.service_netmask = snk
