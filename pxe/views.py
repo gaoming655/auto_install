@@ -3,6 +3,7 @@ from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,Http404,HttpResponseRedirect
 from django.contrib.auth import login,logout,authenticate
 from forms import *
+from django.core.cache import cache
 from auto_install.settings import server_ip,content_ip
 from django.contrib.auth.decorators import login_required
 import requests
