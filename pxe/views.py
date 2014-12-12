@@ -68,6 +68,8 @@ def start(request,echo_id):
     """点击开始"""
     if request.method == 'GET':
         d = online.objects.get(id=int(echo_id))
+        if d.status:
+            return HttpResponse("<script>alert('已经开始安装');window.location.href='/exe/';</script>")        
         lv = d.level
         ip = d.ip
         disk = d.raid_zh
@@ -90,13 +92,15 @@ def start(request,echo_id):
                 break
         raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
         q = requests.get(raid_url)
+        d.status=True
+        d.save()        
         j = json.loads(q.text)
         if j['code'] == 0:
             requests.get(reboot_url)
-            d.status=True
-            d.save()
             return HttpResponse(json.dumps({'code':0}))
         else:
+            d.ststus=False
+            d.save()
             return HttpResponse(json.dumps({'code':1}))
 
 
