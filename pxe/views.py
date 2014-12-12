@@ -69,7 +69,7 @@ def start(request,echo_id):
     if request.method == 'GET':
         d = online.objects.get(id=int(echo_id))
         if d.status:
-            return HttpResponse("<script>alert('已经开始安装');window.location.href='/exe/';</script>")        
+            return HttpResponse(json.dumps({'code':100}))
         lv = d.level
         ip = d.ip
         disk = d.raid_zh

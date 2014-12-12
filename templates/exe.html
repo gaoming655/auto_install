@@ -20,16 +20,21 @@
 	$(document).ready(function() {
 		$("input").click(function(){
 			var id = this.id;
+			$("#"+id).attr("disabled","disabled").val("玩命加载中...");
 			$.get("/start/" + id,function(data,status){
 			d = JSON.parse(data);
 		//	alert(d.code);
 			if (d.code == 0){
-				$("#"+id).attr("disabled","disabled").val("安装中");
+				$("#"+id).val("安装中");
 				$("#e_"+id).attr("disabled","disabled").text("-----");
 			}
-			else {
+			else if (d.code == 100 ){
+				alert("已经开始安装");
+				window.location.href='/exe/';
+			}
+			else{
 				$("#"+id).val("安装失败");
-			}			
+			}  
 			})
 		})
 		$("#help").hover(function() {
