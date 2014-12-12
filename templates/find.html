@@ -27,9 +27,9 @@
 		<td><button type="button" class="btn btn-danger btn-sm" disabled="disabled">禁用</button></td>
 		{% endif %}
 		{% if i.status %}
-		<td class="fff"><button type="button" class="btn btn-primary btn-sm"><a class="btn btn-primary btn-sm" href="/lock/{{i.id}}/{{i.status}}">锁定</a></button></td>
+		<td class="fff"><a class="btn btn-primary btn-sm" role="button" href="/lock/{{i.id}}/{{i.status}}">锁定</a></td>
 		{% else %}
-		<td class="fff"><a class="btn btn-warning btn-sm" href="/lock/{{i.id}}/{{i.status}}">解锁</a></button></td>
+		<td class="fff"><a class="btn btn-warning btn-sm" role="button" href="/lock/{{i.id}}/{{i.status}}">解锁</a></td>
 		{% endif %}
 		<td><a data-trigger="confirm" data-cssclass="del" class="btn btn-default btn-sm" href="/del/{{i.id}}">删除</a></td>
 	</tr>
