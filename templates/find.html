@@ -1,7 +1,7 @@
 {% extends 'install.html' %}
 {% block cs %}
 <style type="text/css">
-.fff a{
+	a{
 	color: #fff;
 }
 </style>
@@ -22,14 +22,14 @@
 		<td>{{ i.sn }}</td>
 		<td><button type="button" class="btn btn-info btn-sm"  data-trigger="modal" data-title="配置信息" data-cssclass="info" href="/info/{{ i.id }}" id="{{i.id}}">详细信息</button></td>
 		{% if i.status %}
-		<td class="fff"><button type="button" class="btn btn-success btn-sm"><a href="/online/{{i.id}}">装机</a></button></td>
+		<td class="fff"><a class="btn btn-success btn-sm" role="button" href="/online/{{i.id}}">装机</a></td>
 		{% else %}
 		<td><button type="button" class="btn btn-danger btn-sm" disabled="disabled">禁用</button></td>
 		{% endif %}
 		{% if i.status %}
-		<td class="fff"><button type="button" class="btn btn-primary btn-sm"><a href="/lock/{{i.id}}/{{i.status}}">锁定</a></button></td>
+		<td class="fff"><button type="button" class="btn btn-primary btn-sm"><a class="btn btn-primary btn-sm" href="/lock/{{i.id}}/{{i.status}}">锁定</a></button></td>
 		{% else %}
-		<td class="fff"><button type="button" class="btn btn-warning btn-sm"><a href="/lock/{{i.id}}/{{i.status}}">解锁</a></button></td>
+		<td class="fff"><a class="btn btn-warning btn-sm" href="/lock/{{i.id}}/{{i.status}}">解锁</a></button></td>
 		{% endif %}
 		<td><a data-trigger="confirm" data-cssclass="del" class="btn btn-default btn-sm" href="/del/{{i.id}}">删除</a></td>
 	</tr>
