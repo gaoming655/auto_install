@@ -67,7 +67,7 @@
 		{% if i.status %}
 		<script type="text/javascript">
             $(document).ready(function(){
-        var progresspump = setInterval(function(){
+        	var progresspump = setInterval(function(){
             /* query the completion percentage from the server */
             $.get("/jindu_get/{{ i.id }}/",function(result){
                /* update the progress bar width */

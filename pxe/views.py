@@ -11,6 +11,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 import os
 import re
+import socket
 # Create your views here.
 
 # Validation IP address is True
@@ -98,6 +99,8 @@ def start(request,echo_id):
         j = json.loads(q.text)
         if j['code'] == 0:
             requests.get(reboot_url)
+            key = "%s_ip" % echo_id
+            cache.set(key,s_ip)
             return HttpResponse(json.dumps({'code':0}))
         else:
             d.ststus=False
@@ -314,6 +317,20 @@ def download_file(request,file_name):
     r['Content-Disposition'] = 'attachment; filename=%s' % file_name
     return r
     
+# test SSH server is active [socket]
+def ssh_server_is_active(server_id):
+    cs = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    ipaddress = cache.get("%s_ip" % server_id)
+    code = cs.connect_ex((ipaddress,22))
+    if not code:
+        cache.delete(id_ip)
+        o = online.objects.get(id=int(server_id))
+        o.ssh_status = True
+        o.save()
+    return code
+
+@login_required(login_url="/")
 def ping(request,ping_id):
     if request.mothod == "GET":
-        return HttpResponseRedirect('/exe/')
+        r_code = ssh_server_is_active(ping_id)
+        return HttpResponseRedirect(json.dumps({'code':r_code}))

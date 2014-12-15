@@ -47,6 +47,7 @@ class online(models.Model):
     finish_status = models.BooleanField(default=False)
     jindu = models.IntegerField(max_length=3,default=0)
     eth = models.CharField(max_length=10,choices=ETH,default='eth0',blank=False)
+    ssh_status = models.BooleanField(default=False)
     ksdev = models.CharField(max_length=10)
     def __unicode__(self):
         return "%s" % self.ip
