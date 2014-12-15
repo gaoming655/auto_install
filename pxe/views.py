@@ -270,22 +270,18 @@ def delivery(request,obj_id):
         return HttpResponseRedirect('/his/')
 
 @csrf_exempt
-def jindu_post(request,get_sn):
+def jindu_post(request,get_id):
     if request.method == "POST":
         jindu = int(request.POST.get('jindu',0))
-        d = online.objects.get(sn=get_sn)
-        d.jindu = jindu
-        d.save()
+        cache.set(get_id,jindu,300)
         return HttpResponse(json.dumps({'code':0}))
     
 
 @login_required(login_url="/")
-def get_jindu_from_db(request,get_id):
+def get_jindu_from_cache(request,get_id):
     if request.method == "GET":
-        d = online.objects.get(id=int(get_id))
-        jindu_val = d.jindu
+        jindu_val = cache.get(get_id,0)
         return HttpResponse(json.dumps({"val":jindu_val}))
-        
         
 
 def get_eth_from_obj(f_id):
@@ -303,7 +299,8 @@ def get_eth_from_obj(f_id):
 
 def kickstart_file_url(request,get_ks_id):
     o = online.objects.get(id=int(get_ks_id))
-    return render(request,'ks/%s.cfg' % o.kickstart,{'server':o,'server_ip':server_ip,'content_ip':content_ip})
+    oid = int(get_ks_id)
+    return render(request,'ks/%s.cfg' % o.kickstart,{'server':o,'server_ip':server_ip,'content_ip':content_ip,'id':oid})
 
 
 def download_file(request,file_name):
