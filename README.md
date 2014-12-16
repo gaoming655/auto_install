@@ -9,6 +9,7 @@ auto_install
 *   request
 *   python-memcached
 *   mysql-python
+
 ------------------
 目录结构
 
