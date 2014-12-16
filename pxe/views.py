@@ -174,6 +174,7 @@ def edit(request,obj_id):
         sip = d.get("service_ip").strip()
         snk = d.get("service_netmask")
         sgw = d.get("service_gw").strip()
+        obj.ilo_netmask = ilo_netmask
         obj.eth = eth
         obj.level = level
         obj.service_netmask = snk
