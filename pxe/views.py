@@ -243,7 +243,7 @@ def register_post(request):
         obj.save()
         install_id = obj.id
         for k,v in disk.items():
-            dso = disk_sotl(sotl=int(k),size=v,host_id=install_id)
+            dso = disk_sotl(sotl=k,size=v,host_id=install_id)
             dso.save()
             dso = None
 
