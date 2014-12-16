@@ -101,7 +101,7 @@ def start(request,echo_id):
             requests.get(reboot_url)
             key = "%s_ip" % echo_id
             print key,type(key),type(s_ip)
-            cache.set(key,s_ip)
+            cache.set(str(key),str(s_ip))
             return HttpResponse(json.dumps({'code':0}))
         else:
             d.ststus=False
@@ -320,11 +320,11 @@ def download_file(request,file_name):
 def ssh_server_is_active(server_id):
     cs = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     ipaddress = cache.get("%s_ip" % server_id)
-    print ipaddress
+    print ip
     code = cs.connect_ex((str(ipaddress),22))
     print code
     if not code:
-        cache.delete(id_ip)
+        cache.delete("%s_ip" % server_id)
         o = online.objects.get(id=int(server_id))
         o.ssh_status = True
         o.save()
