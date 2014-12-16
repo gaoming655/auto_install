@@ -320,7 +320,6 @@ def download_file(request,file_name):
 def ssh_server_is_active(server_id):
     cs = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     ipaddress = cache.get("%s_ip" % server_id)
-    print ip
     code = cs.connect_ex((str(ipaddress),22))
     print code
     if not code:
@@ -334,5 +333,4 @@ def ssh_server_is_active(server_id):
 def ping(request,ping_id):
     if request.method == "GET":
         r_code = ssh_server_is_active(ping_id)
-        print 1
-        return HttpResponseRedirect(json.dumps({'code':r_code}))
+        return HttpResponse(json.dumps({'code':r_code}))
