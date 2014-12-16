@@ -45,7 +45,7 @@
         }, 3000);});
 		</script>
 		{% endif %}
-		<td><a class="btn btn-info btn-sm" role="hutton" href="/delivery/{{i.id}}" style="color:#fff">交付</a></td>
+		<td><a data-trigger="confirm" data-cssclass="del" class="btn btn-default btn-sm" href="/delivery/{{i.id}}">交付</a></td>
 	</tr>
 	{% endfor %}
 </table>
