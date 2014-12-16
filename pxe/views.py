@@ -331,6 +331,7 @@ def ssh_server_is_active(server_id):
 
 @login_required(login_url="/")
 def ping(request,ping_id):
-    if request.mothod == "GET":
+    if request.method == "GET":
         r_code = ssh_server_is_active(ping_id)
+        print 1
         return HttpResponseRedirect(json.dumps({'code':r_code}))

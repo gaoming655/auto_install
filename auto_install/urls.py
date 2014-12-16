@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^his/',his_page,name="his"),
     url(r'^finish/',finish_api),
     url(r'^delivery/(?P<obj_id>\d+)',delivery),
+    url(r'^ping/(?P<ping_id>)\d+',ping,name='ping'),
     url(r'^admin/', include(admin.site.urls)),
 )
 
