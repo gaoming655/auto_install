@@ -74,7 +74,6 @@
                var result= eval('('+result+')');
                $.each(result,function(index,d){
                var data = d;
-               console.log(data);
                 /* update the progress bar width */
                 $("#hostprogress{{ i.id }}").css('width',data+'%');
                 /* and display the numeric value */

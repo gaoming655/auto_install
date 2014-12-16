@@ -31,21 +31,21 @@
             $.get("/ping/{{ i.id }}/",function(result){
                /* update the progress bar width */
                var result= eval('('+result+')');
-               console.log(data);
                $.each(result,function(index,d){
+              /* console.log(data); */
                var data = d;
                 /* test to see if the job has completed */
                 if(data == 0 ) {
                 /*    window.location.reload(); */
                     clearInterval(progresspump);
-                    $("#"+{{i.id}}).text("可登陆").removeClass("btn-info").addClass("btn-success");
+                    $("#"+{{i.id}}).text("可登陆").removeClass("btn-warning").addClass("btn-success");
                 }
             })
             })
         }, 3000);});
 		</script>
 		{% endif %}
-		<td><a data-trigger="confirm" data-cssclass="del" class="btn btn-default btn-sm" href="/delivery/{{i.id}}">交付</a></td>
+		<td><a data-trigger="confirm" data-cssclass="del" class="btn btn-info btn-sm" href="/delivery/{{i.id}}">交付</a></td>
 	</tr>
 	{% endfor %}
 </table>

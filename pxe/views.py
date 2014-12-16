@@ -100,8 +100,7 @@ def start(request,echo_id):
         if j['code'] == 0:
             requests.get(reboot_url)
             key = "%s_ip" % echo_id
-            print key,type(key),type(s_ip)
-            cache.set(str(key),str(s_ip))
+            cache.set(key,s_ip,43200)
             return HttpResponse(json.dumps({'code':0}))
         else:
             d.ststus=False
@@ -267,6 +266,7 @@ def finish_api(request):
 @login_required(login_url="/")
 def delivery(request,obj_id):
     if request.method == "GET":
+        cache.delete("%s_ip" % obj_id)
         o = get_object_or_404(online,id=obj_id)
         o.delete()
         disk_sotl.objects.filter(host_id=int(obj_id)).delete()
@@ -320,17 +320,16 @@ def download_file(request,file_name):
 def ssh_server_is_active(server_id):
     cs = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     ipaddress = cache.get("%s_ip" % server_id)
-    code = cs.connect_ex((str(ipaddress),22))
+    code = cs.connect_ex((ipaddress,22))
     print code
-    if not code:
-        cache.delete("%s_ip" % server_id)
-        o = online.objects.get(id=int(server_id))
-        o.ssh_status = True
-        o.save()
     return code
 
 @login_required(login_url="/")
 def ping(request,ping_id):
     if request.method == "GET":
         r_code = ssh_server_is_active(ping_id)
-        return HttpResponse(json.dumps({'code':r_code}))
+        if not r_code:
+            o = online.objects.get(id=int(ping_id))
+            o.ssh_status = True
+            o.save()
+    return HttpResponse(json.dumps({'code':r_code}))

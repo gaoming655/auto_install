@@ -88,7 +88,12 @@ USE_L10N = True
 USE_TZ = True
 
 # add memcached
-CACHE_BACKEND = "memcached://127.0.0.1:11211/"
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
