@@ -100,6 +100,7 @@ def start(request,echo_id):
         if j['code'] == 0:
             requests.get(reboot_url)
             key = "%s_ip" % echo_id
+            print key,type(key),type(s_ip)
             cache.set(key,s_ip)
             return HttpResponse(json.dumps({'code':0}))
         else:
@@ -241,7 +242,6 @@ def register_post(request):
         obj = install(inc=dinc,ipaddr=ip,cpu=dcpu,mem=dmem,sotl=dsotl,sn=dsn,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw,ksdev=dksdev)
         obj.save()
         install_id = obj.id
-        print dinc
         for k,v in disk.items():
             dso = disk_sotl(sotl=int(k),size=v,host_id=install_id)
             dso.save()
@@ -295,7 +295,6 @@ def get_eth_from_obj(f_id):
         print i
         if i['maunfacturer'] in inc:
             get_pintan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
-            print get_pintan
             kseth = get_pintan.ksdev
             break    
     return kseth
@@ -321,7 +320,9 @@ def download_file(request,file_name):
 def ssh_server_is_active(server_id):
     cs = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     ipaddress = cache.get("%s_ip" % server_id)
-    code = cs.connect_ex((ipaddress,22))
+    print ipaddress
+    code = cs.connect_ex((str(ipaddress),22))
+    print code
     if not code:
         cache.delete(id_ip)
         o = online.objects.get(id=int(server_id))

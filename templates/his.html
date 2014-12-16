@@ -23,7 +23,7 @@
 		{% if i.ssh_status %}
 		<td><button class="btn btn-info btn-sm">完成</button></td>
 		{% else %}
-		<td><button id="{{i.id}}" class="btn btn-info btn-sm">重启中..</button></td>
+		<td><button id="{{i.id}}" class="btn btn-warning btn-sm">重启中..</button></td>
 		<script type="text/javascript">
             $(document).ready(function(){
         	var progresspump = setInterval(function(){
