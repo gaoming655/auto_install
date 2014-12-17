@@ -48,6 +48,7 @@
 </div>
 <table class="table table-hover table-bordered">
 	<tr>
+		<th>SN</th>
 		<th>业务IP</th>
 		<th>进度</th>
 		<th>ILO_IP</th>
@@ -58,6 +59,7 @@
 	</tr>
 		{% for i in forms %}
 	<tr>
+		<td>{{ i.sn }}</td>
 		<td>{{ i.service_ip }}</td>
 		<td class="td"><div class="progress">
   			<div id="hostprogress{{i.id}}" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{i.jindu}}%">
