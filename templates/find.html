@@ -7,7 +7,8 @@
 </style>
 {% endblock %}
 {% block list %}
-<table class="table table-hover">
+<table id="myTable" class="table table-hover">
+	<thead>
 	<tr>
 		<th>DHCP_IP</th>
 		<th>SN</th>
@@ -16,6 +17,8 @@
 		<th>状态</th>
 		<th>可删除</th>
 	</tr>
+	</thead>
+	<tbody>
 		{% for i in forms %}
 	<tr>
 		<td>{{ i.ipaddr }}</td>
@@ -34,5 +37,6 @@
 		<td><a data-trigger="confirm" data-cssclass="del" class="btn btn-default btn-sm" href="/del/{{i.id}}">删除</a></td>
 	</tr>
 	{% endfor %}
+	</tbody>
 </table>
 {% endblock %}

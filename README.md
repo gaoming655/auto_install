@@ -64,14 +64,14 @@ auto_install
             ├── auto_install.sh
             ├── index.py
             └── post.sh
-![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/jt_login.jpg) 
+![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/boot/images/jt_login.jpg) 
 
-![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/jt.jpg)  
+![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/boot/images/jt.jpg)  
 
-![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/info.jpg)  
+![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/boot/images/info.jpg)  
 
-![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/edit.jpg) 
+![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/boot/images/edit.jpg) 
 
-![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/jd.jpg)
+![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/boot/images/jd.jpg)
 
-![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/images/wancheng.jpg)
+![截图](https://raw.githubusercontent.com/gaoming655/auto_install/master/static/boot/images/wancheng.jpg)

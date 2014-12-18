@@ -43,9 +43,10 @@ def find_page(request):
     """发现主机"""
     if request.method == "GET":
         all_data = install.objects.all()
-        total = len(all_data)
-        on_total = len(online.objects.filter(finish_status=False))
-        return render(request,'find.html',{'forms':all_data, "total":total, "on_total":on_total,"index":"find"})
+        total = all_data.count()
+        his_num = online.objects.filter(finish_status=True).count()
+        on_total = online.objects.filter(finish_status=False).count()
+        return render(request,'find.html',{'forms':all_data, "total":total, "on_total":on_total,"index":"find","his_num":his_num})
 
 @login_required(login_url="/")
 def info(request,info_id):
@@ -61,9 +62,10 @@ def exe_page(request):
     """装机队列页面"""
     if request.method == 'GET':
         f = online.objects.filter(finish_status=False)
-        on_total = len(f)
-        total = len(install.objects.all())
-        return render(request,"exe.html",{'forms':f,"total":total, "on_total":on_total,"index":"exe"})
+        on_total = f.count()
+        his_num = online.objects.filter(finish_status=True).count()
+        total = install.objects.all().count()
+        return render(request,"exe.html",{'forms':f,"total":total, "on_total":on_total,"index":"exe","his_num":his_num})
 
 @login_required(login_url="/")
 def start(request,echo_id):
@@ -253,9 +255,10 @@ def register_post(request):
 def his_page(request):
     if request.method == "GET":
         f = online.objects.filter(finish_status=True)
-        total = len(install.objects.all())
-        on_total = len(online.objects.filter(finish_status=False))
-        return render(request,"his.html",{'forms':f,'index':'succeed',"total":total, "on_total":on_total,})
+        his_num = f.count()
+        total = install.objects.all().count()
+        on_total = online.objects.filter(finish_status=False).count()
+        return render(request,"his.html",{'forms':f,'index':'succeed',"total":total, "on_total":on_total,"his_num":his_num})
 
 @csrf_exempt
 def finish_api(request):
@@ -267,7 +270,7 @@ def finish_api(request):
 @login_required(login_url="/")
 def delivery(request,obj_id):
     if request.method == "GET":
-        cache.delete("%s_ip" % obj_id)
+#        cache.delete("%s_ip" % obj_id)
         o = get_object_or_404(online,id=obj_id)
         o.delete()
         disk_sotl.objects.filter(host_id=int(obj_id)).delete()

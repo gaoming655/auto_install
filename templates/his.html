@@ -1,7 +1,8 @@
 {% extends 'install.html' %}
 
 {% block list %}
-<table class="table table-hover table-bordered">
+<table id="myTable" class="table table-hover">
+	<thead>
 	<tr>
 		<th>品牌</th>
 		<th>IP</th>
@@ -12,6 +13,8 @@
 		<th>状态</th>
 		<th>上线</th>
 	</tr>
+	</thead>
+	<tbody>
 		{% for i in forms %}
 	<tr>
 		<td>{{ i.inc }}</td>
@@ -48,5 +51,6 @@
 		<td><a data-trigger="confirm" data-cssclass="del" class="btn btn-info btn-sm" href="/delivery/{{i.id}}">交付</a></td>
 	</tr>
 	{% endfor %}
+	</tbody>
 </table>
 {% endblock %}

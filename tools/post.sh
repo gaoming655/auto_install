@@ -35,4 +35,16 @@ echo $disk >>info.json
 echo '}' >>info.json
 echo '}' >>info.json
 
-curl -X POST  -H 'content-type:application/json' -d @info.json   http://@@server_ip@@/post/
+parse_json(){
+echo $1 | sed 's/.*'$2':\([^,}]*\).*/\1/'
+}
+while : ; do
+	string=`curl -X POST  -H 'content-type:application/json' -d @info.json   http://@@server_ip@@/post/`
+	val=$(parse_json $string "code")
+	if [ $val == "0" ];then
+		break
+	else
+		sleep 20
+		continue
+	fi
+done

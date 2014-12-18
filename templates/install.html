@@ -9,6 +9,9 @@
                 if (home != '#'){
                    $(home).addClass('active');
                 }
+                $('#myTable').DataTable({
+                  "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]]
+                });
             })
 </script>
 <style type="text/css">
@@ -73,7 +76,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
           <span class="glyphicon glyphicon-ok"></span>
-          <label>成功安装 <span class="badge"></span></label>
+          <label>成功安装 <span class="badge">{{his_num}}</span></label>
         </div>
         <div class="panel-body">
           <ul class="nav nav-pills nav-stacked" role="tablist">   
@@ -97,15 +100,5 @@
 {% block list %}
 {% endblock %}
 	</div>
-</div>
-<div class="row">
-  <div class="col-md-10 col-md-offset-2">
-  <nav>
-  <ul class="pager">
-    <li class="previous disabled"><a href="#">Previous</a></li>
-    <li class="next"><a href="#">Next</a></li>
-  </ul>
-</nav>
-</div>
 </div>
 {% endblock %}

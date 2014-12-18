@@ -46,7 +46,8 @@
 {% block list %}
 <div class="default_alert">
 </div>
-<table class="table table-hover table-bordered">
+<table id="myTable" class="table table-hover">
+	<thead>
 	<tr>
 		<th>SN</th>
 		<th>业务IP</th>
@@ -57,6 +58,8 @@
 		<th>编辑</th>
 		<th>安装 <span id="help" class="glyphicon glyphicon-info-sign"></span></th>
 	</tr>
+	</thead>
+	<tbody>
 		{% for i in forms %}
 	<tr>
 		<td>{{ i.sn }}</td>
@@ -108,5 +111,6 @@
 		{% endif %}
 	</tr>
 	{% endfor %}
+	</tbody>
 </table>
 {% endblock %}
