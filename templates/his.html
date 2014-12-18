@@ -24,7 +24,7 @@
 		<td>{{ i.level }}</td>
 		<td>{{ i.raid_zh }}</td>
 		{% if i.ssh_status %}
-		<td><button class="btn btn-info btn-sm">完成</button></td>
+		<td><button class="btn btn-success btn-sm">可登陆</button></td>
 		{% else %}
 		<td><button id="{{i.id}}" class="btn btn-warning btn-sm">重启中..</button></td>
 		<script type="text/javascript">
