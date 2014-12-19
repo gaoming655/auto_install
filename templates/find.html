@@ -5,24 +5,39 @@
 	color: #fff;
 }
 </style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#piliang").click(function(){
+			$("input[name='find']").each(function(){
+			if($(this).prop("checked")){     
+    			$(this).prop("checked",false);     
+         	}     
+   			else{     
+    			$(this).prop("checked",true);              
+   			}        
+		})
+		})
+	})
+</script>
 {% endblock %}
 {% block list %}
 <table id="myTable" class="table table-hover">
 	<thead>
 	<tr>
-		<th>DHCP_IP</th>
 		<th>SN</th>
+		<th>DHCP_IP</th>
 		<th>详情</th>
 		<th>操作</th>
 		<th>状态</th>
 		<th>可删除</th>
+		<th id="piliang" style="color:#5bc0de">批量可选</th>
 	</tr>
 	</thead>
 	<tbody>
 		{% for i in forms %}
 	<tr>
-		<td>{{ i.ipaddr }}</td>
 		<td>{{ i.sn }}</td>
+		<td>{{ i.ipaddr }}</td>
 		<td><button type="button" class="btn btn-info btn-sm"  data-trigger="modal" data-title="配置信息" data-cssclass="info" href="/info/{{ i.id }}" id="{{i.id}}">详细信息</button></td>
 		{% if i.status %}
 		<td class="fff"><a class="btn btn-success btn-sm" role="button" href="/online/{{i.id}}">装机</a></td>
@@ -35,6 +50,7 @@
 		<td class="fff"><a class="btn btn-warning btn-sm" role="button" href="/lock/{{i.id}}/{{i.status}}">解锁</a></td>
 		{% endif %}
 		<td><a data-trigger="confirm" data-cssclass="del" class="btn btn-default btn-sm" href="/del/{{i.id}}">删除</a></td>
+		<td><input type="checkbox" name="find" value="{{i.id}}"></td>
 	</tr>
 	{% endfor %}
 	</tbody>

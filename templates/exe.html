@@ -38,7 +38,7 @@
 			})
 		})
 		$("#help").hover(function() {
-			$(".default_alert").html('<div class="alert alert-warning alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button><strong>不要多人同时安装同一台机器</strong></div>')
+			$(".default_alert").html('<div class="alert alert-warning alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button><strong>点击安装加载中时不要刷新页面</strong></div>')
 		})
 })
 </script>
@@ -49,6 +49,7 @@
 <table id="myTable" class="table table-hover">
 	<thead>
 	<tr>
+		<th>ID</th>
 		<th>SN</th>
 		<th>业务IP</th>
 		<th>进度</th>
@@ -62,6 +63,7 @@
 	<tbody>
 		{% for i in forms %}
 	<tr>
+		<td>{{ i.id }}</td>
 		<td>{{ i.sn }}</td>
 		<td>{{ i.service_ip }}</td>
 		<td class="td"><div class="progress">
