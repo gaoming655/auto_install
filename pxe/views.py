@@ -102,7 +102,7 @@ def start(request,echo_id):
         if j['code'] == 0:
             requests.get(reboot_url)
             key = "%s_ip" % echo_id
-            cache.set(key,s_ip,43200)
+            cache.set(key,s_ip,864000)
             return HttpResponse(json.dumps({'code':0}))
         else:
             d.status=False
