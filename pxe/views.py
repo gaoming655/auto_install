@@ -105,7 +105,7 @@ def start(request,echo_id):
             cache.set(key,s_ip,43200)
             return HttpResponse(json.dumps({'code':0}))
         else:
-            d.ststus=False
+            d.status=False
             d.save()
             return HttpResponse(json.dumps({'code':1}))
 
