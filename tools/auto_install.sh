@@ -2,6 +2,7 @@
 #letv functions auto install  machine bash
 #mady by G.M
 #date: 2014-11-11
+set -e 
 inc=`/usr/bin/facter manufacturer`
 echo $inc|grep HP > /dev/null
 code=$?
@@ -62,7 +63,7 @@ IPMI(){
 	if [ $code -eq "0" ];then
 		ipmitool  user set   password 1 @qiugaoqs123
 	fi
-#	ipmitool mc reset cold
+	( ipmitool mc reset cold ) &
  
 }
 key=$1
