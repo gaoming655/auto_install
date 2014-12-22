@@ -19,11 +19,13 @@
 		})
 		$("#zhixing").click(function(){
 			var string = '';
+			var $btn = $(this).button('loading');
 			$("input[name='find']:checked").each(function(){
 				string += $(this).val() + ","
 			})
 			if (string == ''){
 				alert("Nothing Select");
+				$btn.button('reset');
 			}
 			else{
 				$.post("{% url "piliang" %}",{
@@ -44,7 +46,6 @@
 				})
 
 			}
-			
 		})
 	})
 </script>
