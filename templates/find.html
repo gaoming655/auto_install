@@ -7,13 +7,15 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("#piliang").click(function(){
+		$("#piliang").click(function(e){
 			$("input[name='find']").each(function(){
 			if($(this).prop("checked")){     
     			$(this).prop("checked",false);     
          	}     
    			else{     
-    			$(this).prop("checked",true);              
+    			$(this).prop("checked",true);
+    			e.preventDefault();
+    			$.scojs_message('批量操作根据统计200台机器需要30秒左右，请耐心等待', $.scojs_message.TYPE_ERROR);
    			}        
 		})
 		})
@@ -84,5 +86,5 @@
 	{% endfor %}
 	</tbody>
 </table>
-<button id="zhixing"  class="btn  btn-default">批量执行</button>
+<button id="zhixing" class="btn  btn-default">批量执行</button>
 {% endblock %}
