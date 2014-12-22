@@ -128,9 +128,8 @@ def lock_obj(request,obj_id,obj_code):
             install.objects.filter(id=int(obj_id)).update(status=True)
         return HttpResponseRedirect('/find/')
 
-@login_required(login_url="/")
-def online_view(request,obj_id):
-    """放入装机队列"""
+def push_install_mq(obj_id):
+    """放入装机队列功能函数"""
     install_id = int(obj_id)
     d = install.objects.get(id=install_id)
     ipd = d.ipaddr
@@ -144,8 +143,28 @@ def online_view(request,obj_id):
     obj = online(sn=snd,inc=incd,ip=ipd,sotl_total=channel,ilo_ip=dilo_ip,ilo_netmask=dilo_netmask,ilo_gw=dilo_gw,ksdev=dksdev)
     obj.save()
     d.delete()
-    disk_sotl.objects.filter(host_id=install_id).update(host_id=obj.id)
+    disk_sotl.objects.filter(host_id=install_id).update(host_id=obj.id)    
+
+
+@login_required(login_url="/")
+def online_view(request,obj_id):
+    """放入装机队列"""
+    push_install_mq(obj_id)
     return HttpResponseRedirect("/find/")
+
+@login_required(login_url="/")
+def piliang(request):
+    """批量放入装机队列"""
+    if request.method == "POST":
+        id_list = request.POST.get("server_list")
+        id_list = id_list.replace(',',' ').strip().split()
+        print id_list
+        for i in id_list:
+            try:
+                push_install_mq(i)
+            except:
+                return HttpResponse(json.dumps({"code":1}))
+        return HttpResponse(json.dumps({"code":0}))
 
 @login_required(login_url="/")
 def edit(request,obj_id):
