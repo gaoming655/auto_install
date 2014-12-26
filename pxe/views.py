@@ -356,3 +356,9 @@ def ping(request,ping_id):
             o.ssh_status = True
             o.save()
     return HttpResponse(json.dumps({'code':r_code}))
+
+@login_required(login_url="/")
+def export_ip(request):
+    if request.method == "GET":
+        f = online.objects.filter(finish_status=True).order_by('service_ip')
+        return render(request,'export.html',{'forms':f})
