@@ -95,7 +95,10 @@ def start(request,echo_id):
                 lan = get_pintan.lan_num
                 break
         raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
-        q = requests.get(raid_url)
+        try:
+            q = requests.get(raid_url)
+        except:
+            return HttpResponse(json.dumps({'code':2}))
         d.status=True
         d.save()        
         j = json.loads(q.text)

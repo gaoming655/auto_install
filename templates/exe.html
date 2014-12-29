@@ -17,8 +17,7 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
-	$(document).ready(function() {
-		$("input").click(function(){
+	$(document).on('click','.exe',function(){
 			var id = this.id;
 			$("#"+id).attr("disabled","disabled").val("玩命加载中...");
 			$.get("/start/" + id,function(data,status){
@@ -32,15 +31,19 @@
 				alert("已经开始安装");
 				window.location.href='/exe/';
 			}
+			else if (d.code == 2 ){
+				$("#"+id).val("API 连接失败").removeAttr('disabled');
+			}
 			else{
-				$("#"+id).val("安装失败");
+				$("#"+id).val("安装失败").removeAttr('disabled');
 			}  
 			})
 		})
+	$(document).ready(function(){
 		$("#help").hover(function() {
 			$(".default_alert").html('<div class="alert alert-warning alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button><strong>点击安装加载中时不要刷新页面</strong></div>')
 		})
-})
+	})
 </script>
 {% endblock %}
 {% block list %}
@@ -106,7 +109,7 @@
 		{% else %}
 			<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="e_{{i.id}}">Edit</button></td>
 			{% if i.raid_zh and i.service_ip and i.ilo_ip and i.service_gw and i.ilo_gw %}
-				<td><input  type="button" class="btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
+				<td><input  type="button" class="exe btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
 			{% else %}
 				<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >请先编辑</button></td>
 			{% endif %}
