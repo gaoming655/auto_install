@@ -44,20 +44,24 @@
 		})
 	$(document).ready(function(){
 		$("#help").hover(function() {
-			$(".default_alert").html('<input type="button" class="btn btn-warning pipei" value="根据提交的XLS自动填写表单">');
+			$(".pipei").slideDown('show');
 		});
 		$("#upload").change(function(){
 			$("#up_t").val($(this).val());
 		});
+		$('.pipei').click(function(){
+			alert('no');
+		});
 	})
-	$(document).on('click','.pipei',function(){
-		alert('ok');
-	})
+//	$(document).on('click','.pipei',function(){
+//		alert('ok');
+//	})
 </script>
 
 {% endblock %}
 {% block list %}
 <div class="default_alert">
+	<input type="button" class="btn btn-warning pipei" value="根据提交的XLS自动填写表单" style="display:none">
 </div>
 <table id="myTable" class="table table-hover">
 	<thead>
