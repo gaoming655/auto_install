@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     url(r'^ping/(?P<ping_id>\d+)',ping,name='ping'),
     url(r'^piliang/$',piliang,name="piliang"),
     url(r'^export_ip/$',export_ip,name="export_ip"),
+    url(r'^upload/$',upload_file,name='upload'),
     url(r'^admin/', include(admin.site.urls)),
 )
 

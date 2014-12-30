@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import re
 import socket
+import platform
 # Create your views here.
 
 # Validation IP address is True
@@ -366,3 +367,27 @@ def export_ip(request):
     if request.method == "GET":
         f = online.objects.filter(finish_status=True).order_by('service_ip')
         return render(request,'export.html',{'forms':f})
+
+
+
+
+def handle_uploaded_file(f):
+    print platform.system
+    if platform.system() == "Windows":
+        file_path = "d:\\123.xls"
+    else:
+        file_path = "/tmp/123.xls"
+    ff = open(file_path,'wb')
+    for chunk in f.chunks():
+        ff.write(chunk)
+        
+@login_required(login_url="/")
+def upload_file(request):
+    if request.method == "POST":
+        try:
+            s = request.FILES['file']
+            print s
+        except:
+            return HttpResponse("<script>alert('没找到文件');window.location.href='/exe/';</script>")
+        handle_uploaded_file(s)
+        return HttpResponse("<script>alert('上传成功');window.location.href='/exe/';</script>")
