@@ -21,6 +21,8 @@ import time
 # Validation IP address is True
 rc = re.compile(r'^((?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[0-9]{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[0-9]{1,2})))$')
 rr = re.compile(r'.*\.csv$')
+csv_first_line = ['Serial Number ','Raid Level(1,0,5)','Strip(KB)','Disk list','Remote management IP','Remote management Netmask','Remote management Gateway','Productive Ip','Productive Netmask','Productive Gateway','System name']
+_sep = os.sep
 def login_view(request):
     """用户登录认证"""
     if  request.method == 'POST':
@@ -101,7 +103,7 @@ def start(request,echo_id):
                 break
         raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
         try:
-            q = requests.get(raid_url)
+            q = requests.get(raid_url,timeout=3)
         except:
             return HttpResponse(json.dumps({'code':2}))
         d.status=True
@@ -339,17 +341,19 @@ def handle_csv_file(file_name):
     f_csv = open(file_name,'wb')
     book = csv.writer(f_csv)
     object_sn = online.objects.filter(status=False).values_list('sn')
+    book.writerow(csv_first_line)
     for i in object_sn:
         book.writerow(['%s' % i[0]])    
 
 def download_file(request,file_name):
     base_dir = os.path.join(os.path.dirname(__file__),'../tools/').replace('\\','/')
-    f = open(base_dir+file_name,'rb')
+    print base_dir
     if file_name == "autocommit.csv":
         handle_csv_file(base_dir+file_name)
         f = open(base_dir+file_name,'rb')
+    else:
+        f = open(base_dir+file_name,'rb')
     file_content = f.read()
-    print file_content
     f.close()
     if file_name == "post.sh" or file_name == "index.py":
         file_content = file_content.replace("@@server_ip@@", server_ip)
@@ -385,7 +389,7 @@ def W_or_L():
     """判断平台"""
     time_tag = time.strftime("%d",time.localtime(time.time()))
     if platform.system() == "Windows":
-        file_path = "d:\\auto_install%s.csv" % time_tag
+        file_path = "d:/auto_install%s.csv" % time_tag
     else:
         file_path = "/tmp/auto_install%s.csv" % time_tag
     return file_path
@@ -424,10 +428,8 @@ def auto_commit(request):
         except:
             return HttpResponse(json.dumps({'code':1}))
         for line in csvbook:
-            print line
             try:
                 sn,level,stripe,disk,ilo_ip,ilo_nk,ilo_gw,s_ip,s_nk,s_gw,system_name = line
-                print sn,type(sn)
                 o = online.objects.get(sn=sn)
                 if not o.status:
                     o.level = level
