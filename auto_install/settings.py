@@ -54,7 +54,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 )
-
+FILE_UPLOAD_HANDLERS = (
+    "django.core.files.uploadhandler.MemoryFileUploadHandler",
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler"
+)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880
 ROOT_URLCONF = 'auto_install.urls'
 
 WSGI_APPLICATION = 'auto_install.wsgi.application'
