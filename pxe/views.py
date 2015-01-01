@@ -1,5 +1,7 @@
 #coding=utf-8
-#version 2.0
+#version 2.1
+#made by G.M
+#date : 2013-10-29
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,Http404,HttpResponseRedirect
 from django.contrib.auth import login,logout,authenticate
