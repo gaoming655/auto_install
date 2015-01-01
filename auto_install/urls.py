@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^start/(\d+)',start),
     url(r'^online/(?P<obj_id>\d+)',online_view),
-    url(r'^edit/(?P<obj_id>\d+)',edit),
+    url(r'^edit/(?P<obj_id>\d+)',edit,name="edit"),
     url(r'^info/(\d+)', info, name='info'),
     url(r'^exe/',exe_page,name="exe"),
     url(r'^$', login_view,name='login'),
@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^piliang/$',piliang,name="piliang"),
     url(r'^export_ip/$',export_ip,name="export_ip"),
     url(r'^upload/$',upload_file,name='upload'),
+    url(r'^commit/$',auto_commit,name='commit'),
     url(r'^admin/', include(admin.site.urls)),
 )
 
@@ -39,5 +40,5 @@ urlpatterns += patterns('',
 
 # Api file download for memos
 urlpatterns += patterns('',
-    url(r'^(?P<file_name>auto_install.sh|index.py|post.sh)$',download_file),
+    url(r'^(?P<file_name>auto_install.sh|index.py|post.sh|autocommit.csv)',download_file,name="download"),
 )

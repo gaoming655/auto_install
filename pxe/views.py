@@ -10,14 +10,17 @@ from django.contrib.auth.decorators import login_required
 import requests
 import json
 from django.views.decorators.csrf import csrf_exempt
+import csv
 import os
 import re
 import socket
 import platform
+import time
 # Create your views here.
 
 # Validation IP address is True
 rc = re.compile(r'^((?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[0-9]{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[0-9]{1,2})))$')
+rr = re.compile(r'.*\.csv$')
 def login_view(request):
     """用户登录认证"""
     if  request.method == 'POST':
@@ -332,11 +335,21 @@ def kickstart_file_url(request,get_ks_id):
     oid = int(get_ks_id)
     return render(request,'ks/%s.cfg' % o.kickstart,{'server':o,'server_ip':server_ip,'content_ip':content_ip,'id':oid})
 
+def handle_csv_file(file_name):
+    f_csv = open(file_name,'wb')
+    book = csv.writer(f_csv)
+    object_sn = online.objects.filter(status=False).values_list('sn')
+    for i in object_sn:
+        book.writerow(['%s' % i[0]])    
 
 def download_file(request,file_name):
     base_dir = os.path.join(os.path.dirname(__file__),'../tools/').replace('\\','/')
     f = open(base_dir+file_name,'rb')
+    if file_name == "autocommit.csv":
+        handle_csv_file(base_dir+file_name)
+        f = open(base_dir+file_name,'rb')
     file_content = f.read()
+    print file_content
     f.close()
     if file_name == "post.sh" or file_name == "index.py":
         file_content = file_content.replace("@@server_ip@@", server_ip)
@@ -349,7 +362,6 @@ def ssh_server_is_active(server_id):
     cs = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     ipaddress = cache.get("%s_ip" % server_id)
     code = cs.connect_ex((ipaddress,22))
-    print code
     return code
 
 @login_required(login_url="/")
@@ -369,25 +381,70 @@ def export_ip(request):
         return render(request,'export.html',{'forms':f})
 
 
-
+def W_or_L():
+    """判断平台"""
+    time_tag = time.strftime("%d",time.localtime(time.time()))
+    if platform.system() == "Windows":
+        file_path = "d:\\auto_install%s.csv" % time_tag
+    else:
+        file_path = "/tmp/auto_install%s.csv" % time_tag
+    return file_path
 
 def handle_uploaded_file(f):
-    print platform.system
-    if platform.system() == "Windows":
-        file_path = "d:\\123.xls"
-    else:
-        file_path = "/tmp/123.xls"
+    """文件处理"""
+    file_path = W_or_L()
     ff = open(file_path,'wb')
     for chunk in f.chunks():
         ff.write(chunk)
-        
+    ff.close()
+    
 @login_required(login_url="/")
 def upload_file(request):
+    """上传文件"""
     if request.method == "POST":
         try:
             s = request.FILES['file']
-            print s
+            if rr.findall(s.name):
+                pass
+            else:
+                return  HttpResponse("<script>alert('请提交csv格式文件');window.location.href='/exe/';</script>")
         except:
-            return HttpResponse("<script>alert('没找到文件');window.location.href='/exe/';</script>")
+            return HttpResponse("<script>alert('请先选择文件');window.location.href='/exe/';</script>")
         handle_uploaded_file(s)
         return HttpResponse("<script>alert('上传成功');window.location.href='/exe/';</script>")
+    
+@login_required(login_url="/")
+def auto_commit(request):
+    """自动提交表单"""
+    if request.method == "GET":
+        file_path = W_or_L()
+        try:
+            csvbook = csv.reader(open(file_path,'rb'), dialect='excel')
+            csvbook.next()
+        except:
+            return HttpResponse(json.dumps({'code':1}))
+        for line in csvbook:
+            print line
+            try:
+                sn,level,stripe,disk,ilo_ip,ilo_nk,ilo_gw,s_ip,s_nk,s_gw,system_name = line
+                print sn,type(sn)
+                o = online.objects.get(sn=sn)
+                if not o.status:
+                    o.level = level
+                    o.stripe = stripe
+                    o.raid_zh = disk
+                    o.ilo_ip = ilo_ip
+                    o.ilo_netmask = ilo_nk
+                    o.ilo_gw = ilo_gw
+                    o.service_ip = s_ip
+                    o.service_netmask = s_nk
+                    o.service_gw = s_gw
+                    o.kickstart = system_name
+                    o.save()
+                else:
+                    pass
+            except Exception,e:
+                print e
+                pass
+        return HttpResponse(json.dumps({'code':0}))
+        

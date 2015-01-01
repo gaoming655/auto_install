@@ -50,8 +50,17 @@
 			$("#up_t").val($(this).val());
 		});
 		$('.pipei').click(function(){
-			alert('no');
 			$('.pipei').attr("disabled","disabled").val('拼死加载中!!');
+			$.get("{% url 'commit' %}",function(data,status){
+				d_code = JSON.parse(data);
+				if (d_code.code == 1){
+					alert('没有上传文件');
+				}
+				else if (d_code.code == 0){
+					alert('配置成功!');
+					window.location.href="{% url 'exe' %}";
+				}
+			})
 		});
 	})
 //	$(document).on('click','.pipei',function(){
@@ -62,7 +71,7 @@
 {% endblock %}
 {% block list %}
 <div class="default_alert">
-	<input type="button" class="btn btn-warning pipei" value="根据提交的XLS自动填写表单" style="display:none">
+	<input type="button" class="btn btn-warning pipei" value="根据提交的CSV自动填写表单" style="display:none">
 </div>
 <table id="myTable" class="table table-hover">
 	<thead>
@@ -136,12 +145,13 @@
 <div class="row">
 	<div class="col-lg-6">
 		<div class="input-group">
-			<input type="text" id="up_t" class="form-control" placeholder="上传2003格式xls 不要使用中文命名">
+			<input type="text" id="up_t" class="form-control" placeholder="上传CVS格式文件 不要使用中文命名">
 			<span class="input-group-btn">
 					<form enctype="multipart/form-data" method="POST" action="{% url "upload" %}"> {% csrf_token %}
 					<input class="btn" id="upload" type="file" name="file" style="display:none">
-					<input type="button" class="btn btn-info btn-sm" onclick="$('input[name=file]').click()" value="选择文件">
-					<input class="btn btn-danger btn-sm" type="submit" value="提交">
+					<input type="button" class="btn btn-info" onclick="$('input[name=file]').click()" value="选择文件">
+					<input class="btn btn-danger" type="submit" value="提交">
+					<a  class="btn btn-warning" href="{% url 'download' file_name='autocommit.csv' %}">下载模板</a>
 				</form>
 			</span>
 		</div>
