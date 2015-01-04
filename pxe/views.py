@@ -1,5 +1,5 @@
 #coding=utf-8
-#version 2.1
+#version 2.2.1
 #made by G.M
 #date : 2013-10-29
 from django.shortcuts import render,get_object_or_404
@@ -23,7 +23,7 @@ import time
 # Validation IP address is True
 rc = re.compile(r'^((?:(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[0-9]{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[0-9]{1,2})))$')
 rr = re.compile(r'.*\.csv$')
-csv_first_line = ['Serial Number ','Raid Level(1,0,5)','Strip(KB)','Disk list','Remote management IP','Remote management Netmask','Remote management Gateway','Productive Ip','Productive Netmask','Productive Gateway','System name']
+csv_first_line = ['Serial Number ','Raid Level(1,0,5)','Strip(KB)','Disk list','Remote management IP','Remote management Netmask','Remote management Gateway','Productive Ip','Productive Netmask','Productive Gateway','System name','Interface']
 _sep = os.sep
 def login_view(request):
     """用户登录认证"""
@@ -431,7 +431,7 @@ def auto_commit(request):
             return HttpResponse(json.dumps({'code':1}))
         for line in csvbook:
             try:
-                sn,level,stripe,disk,ilo_ip,ilo_nk,ilo_gw,s_ip,s_nk,s_gw,system_name = line
+                sn,level,stripe,disk,ilo_ip,ilo_nk,ilo_gw,s_ip,s_nk,s_gw,system_name,interface = line
                 o = online.objects.get(sn=sn)
                 if not o.status:
                     o.level = level
@@ -444,6 +444,7 @@ def auto_commit(request):
                     o.service_netmask = s_nk
                     o.service_gw = s_gw
                     o.kickstart = system_name
+                    o.eth = interface
                     o.save()
                 else:
                     pass
