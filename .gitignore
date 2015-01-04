@@ -6,6 +6,7 @@ __pycache__/
 migrations/
 # Distribution / packaging
 .Python
+.svn/
 env/
 build/
 develop-eggs/

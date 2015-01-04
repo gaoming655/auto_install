@@ -62,6 +62,42 @@
 				}
 			})
 		});
+		$("#quanxuan").click(function(e){
+			$("input[name='install']").each(function(){
+			if($(this).prop("checked")){     
+    			$(this).prop("checked",false);     
+         	}     
+   			else{     
+    			$(this).prop("checked",true);
+    			e.preventDefault();
+    			$.scojs_message('批量安装功能非常耗时，请耐心等待,确认后点击页面底部 "批量安装" 按钮', $.scojs_message.TYPE_ERROR);
+   			}        
+		})
+		});
+		$("#batch_install").click(function(){
+			var string = '';
+			var $btn = $(this).button('loading');
+			$("input[name='install']:checked").each(function(){
+				string += $(this).val() + ","
+			})
+			if (string == ''){
+				alert("Nothing Select");
+				$btn.button('reset');
+			}
+			else{
+				$.post("{% url "batch_install" %}",{
+					install_list:string 
+				},
+				function(data,status){
+					data=JSON.parse(data);
+					if (data.code == 0 ){
+						alert("批量执行完毕");
+						 window.location.href="{% url "exe" %}";
+					}
+				})
+
+			}
+		});
 	})
 //	$(document).on('click','.pipei',function(){
 //		alert('ok');
@@ -85,6 +121,7 @@
 		<th>磁盘</th>
 		<th>编辑</th>
 		<th>安装 <span id="help" class="glyphicon glyphicon-fire"></span></th>
+		<th id="quanxuan" style="color:#5bc0de">全选</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -134,8 +171,10 @@
 			<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="e_{{i.id}}">Edit</button></td>
 			{% if i.raid_zh and i.service_ip and i.ilo_ip and i.service_gw and i.ilo_gw %}
 				<td><input  type="button" class="exe btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
+				<td><input type="checkbox" name="install" value="{{i.id}}"></td>
 			{% else %}
 				<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >请先编辑</button></td>
+				<td><input type="checkbox" value="{{i.id}}"></td>
 			{% endif %}
 		{% endif %}
 	</tr>
@@ -143,7 +182,7 @@
 	</tbody>
 </table>
 <div class="row">
-	<div class="col-lg-6">
+	<div class="col-lg-8">
 		<div class="input-group">
 			<input type="text" id="up_t" class="form-control" placeholder="上传CVS格式文件 不要使用中文命名">
 			<span class="input-group-btn">
@@ -151,7 +190,9 @@
 					<input class="btn" id="upload" type="file" name="file" style="display:none">
 					<input type="button" class="btn btn-info" onclick="$('input[name=file]').click()" value="选择文件">
 					<input class="btn btn-danger" type="submit" value="提交">
-					<a  class="btn btn-warning" href="{% url 'download' file_name='autocommit.csv' %}">下载模板</a>
+					<a class="btn btn-warning" href="{% url 'download' file_name='autocommit.csv' %}">下载模板</a>
+					<span></span>
+					<input id="batch_install" class="btn" type="button" value="批量安装">
 				</form>
 			</span>
 		</div>

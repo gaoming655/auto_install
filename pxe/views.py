@@ -120,7 +120,13 @@ def start(request,echo_id):
             d.status=False
             d.save()
             return HttpResponse(json.dumps({'code':1}))
-
+@login_required(login_url="/")
+def batch_install(request):
+    if request.method == "POST":
+        get_id_list = request.POST.get('install_list')
+        get_id_list = get_id_list.replace(',',' ').strip().split()
+        print get_id_list
+        return HttpResponse(json.dumps({'code':0}))
 
 
 @login_required(login_url="/")
