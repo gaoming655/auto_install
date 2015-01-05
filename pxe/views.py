@@ -77,11 +77,14 @@ def exe_page(request):
             key = i[0]
             status_key = "%s_status" % key
             status_num = cache.get(status_key,None)
-            dict_status[key] = status_num
+            if  not status_num:
+                pass
+            else:
+                dict_status[key] = status_num
         on_total = f.count()
         his_num = online.objects.filter(finish_status=True).count()
         total = install.objects.all().count()
-        return render(request,"exe.html",{'forms':f,"total":total, "on_total":on_total,"index":"exe","his_num":his_num,'status_num':dict_status})
+        return render(request,"exe.html",{'forms':f,"total":total, "on_total":on_total,"index":"exe","his_num":his_num,"num":dict_status})
 
 @login_required(login_url="/")
 def start(request,echo_id):
@@ -113,7 +116,7 @@ def start(request,echo_id):
                 break
         raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
         try:
-            q = requests.get(raid_url,timeout=3)
+            q = requests.get(raid_url)
         except:
             cache.set(status_key,1,864000)
             return HttpResponse(json.dumps({'code':2}))
@@ -157,19 +160,19 @@ def mythread_install(get_id):
             get_pintan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
             lan = get_pintan.lan_num
             break
-    raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
+    raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,get_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
     status_key = "%s_status" % get_id
     try:
-        q = requests.get(raid_url,timeout=3)
+        q = requests.get(raid_url)
     except:
-        cache.set(status_key,1,864000)        
+        cache.set(status_key,1,864000)      
         return True
     d.status=True
     d.save()        
     j = json.loads(q.text)
     if j['code'] == 0:
         requests.get(reboot_url)
-        key = "%s_ip" % echo_id
+        key = "%s_ip" % get_id
         cache.set(key,s_ip,864000)       
         return True
     else:
