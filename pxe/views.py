@@ -18,6 +18,7 @@ import re
 import socket
 import platform
 import time
+import threading
 # Create your views here.
 
 # Validation IP address is True
@@ -70,15 +71,21 @@ def info(request,info_id):
 def exe_page(request):
     """装机队列页面"""
     if request.method == 'GET':
+        dict_status = {}
         f = online.objects.filter(finish_status=False)
+        for i in f.values_list():
+            key = i[0]
+            status_key = "%s_status" % key
+            status_num = cache.get(status_key,None)
+            dict_status[key] = status_num
         on_total = f.count()
         his_num = online.objects.filter(finish_status=True).count()
         total = install.objects.all().count()
-        return render(request,"exe.html",{'forms':f,"total":total, "on_total":on_total,"index":"exe","his_num":his_num})
+        return render(request,"exe.html",{'forms':f,"total":total, "on_total":on_total,"index":"exe","his_num":his_num,'status_num':dict_status})
 
 @login_required(login_url="/")
 def start(request,echo_id):
-    """点击开始"""
+    """点击安装"""
     if request.method == 'GET':
         d = online.objects.get(id=int(echo_id))
         if d.status:
@@ -98,6 +105,7 @@ def start(request,echo_id):
         ksdev = d.ksdev
         ilo_list = ilo_table.objects.values('maunfacturer').iterator()
         reboot_url = "http://%s/reboot" % ip
+        status_key = "%s_status" % echo_id
         for i in ilo_list:
             if i['maunfacturer'] in inc:
                 get_pintan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
@@ -107,6 +115,7 @@ def start(request,echo_id):
         try:
             q = requests.get(raid_url,timeout=3)
         except:
+            cache.set(status_key,1,864000)
             return HttpResponse(json.dumps({'code':2}))
         d.status=True
         d.save()        
@@ -117,15 +126,73 @@ def start(request,echo_id):
             cache.set(key,s_ip,864000)
             return HttpResponse(json.dumps({'code':0}))
         else:
+            cache.set(status_key,1,864000)
             d.status=False
-            d.save()
+            d.save()           
             return HttpResponse(json.dumps({'code':1}))
+        
+
+
+def mythread_install(get_id):
+    d = online.objects.get(id=int(get_id))
+    if d.status:
+        return True
+    lv = d.level
+    ip = d.ip
+    disk = d.raid_zh
+    ks = d.kickstart
+    tiaodai = d.stripe
+    ilo_ip = d.ilo_ip
+    ilo_netmask = d.ilo_netmask
+    ilo_gw = d.ilo_gw
+    inc = d.inc
+    s_ip = d.service_ip
+    nk = d.service_netmask
+    gw = d.service_gw
+    ksdev = d.ksdev
+    ilo_list = ilo_table.objects.values('maunfacturer').iterator()
+    reboot_url = "http://%s/reboot" % ip
+    for i in ilo_list:
+        if i['maunfacturer'] in inc:
+            get_pintan = ilo_table.objects.get(maunfacturer=i['maunfacturer'])
+            lan = get_pintan.lan_num
+            break
+    raid_url = "http://%s/raid?lv=%s&disk=%s&tiaodai=%s&ks=%s&ksdev=%s&ilo_ip=%s&lan=%s&ilo_netmask=%s&ilo_gw=%s" % (ip,lv,disk,tiaodai,echo_id,ksdev,ilo_ip,lan,ilo_netmask,ilo_gw)
+    status_key = "%s_status" % get_id
+    try:
+        q = requests.get(raid_url,timeout=3)
+    except:
+        cache.set(status_key,1,864000)        
+        return True
+    d.status=True
+    d.save()        
+    j = json.loads(q.text)
+    if j['code'] == 0:
+        requests.get(reboot_url)
+        key = "%s_ip" % echo_id
+        cache.set(key,s_ip,864000)       
+        return True
+    else:
+        d.status=False
+        d.save()
+        cache.set(status_key,1,864000)
+        return True
+     
+
 @login_required(login_url="/")
 def batch_install(request):
+    """批量点击安装"""
     if request.method == "POST":
         get_id_list = request.POST.get('install_list')
         get_id_list = get_id_list.replace(',',' ').strip().split()
-        print get_id_list
+        l = []
+        for i in get_id_list:
+            i = threading.Thread(target=mythread_install,args=(i,))
+            l.append(i)
+        for o in l:
+            o.start()
+        for q in l:
+            q.join()
         return HttpResponse(json.dumps({'code':0}))
 
 

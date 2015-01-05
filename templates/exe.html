@@ -170,7 +170,11 @@
 		{% else %}
 			<td><button  type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机" data-cssclass="info" id="e_{{i.id}}">Edit</button></td>
 			{% if i.raid_zh and i.service_ip and i.ilo_ip and i.service_gw and i.ilo_gw %}
+				{% if status_num.i.id %}
+				<td><input  type="button" class="exe btn btn-info btn-sm" id="{{i.id}}" value="安装失败"></td>
+				{% else %}
 				<td><input  type="button" class="exe btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
+				{% endif %}
 				<td><input type="checkbox" name="install" value="{{i.id}}"></td>
 			{% else %}
 				<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >请先编辑</button></td>
