@@ -29,6 +29,7 @@
 			if (d.code == 0){
 				$("#"+id).val("安装中");
 				$("#e_"+id).attr("disabled","disabled").text("-----");
+				$("#check_"+id).prop('name',"disable");
 			}
 			else if (d.code == 100 ){
 				alert("已经开始安装");
@@ -176,7 +177,7 @@
 				{% else %}
 				<td><input  type="button" class="exe btn btn-info btn-sm" id="{{i.id}}" value="安装"></td>
 				{% endif %}
-				<td><input type="checkbox" name="install" value="{{i.id}}"></td>
+				<td><input id="check_{{i.id}} "type="checkbox" name="install" value="{{i.id}}"></td>
 			{% else %}
 				<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >请先编辑</button></td>
 				<td><input type="checkbox" value="{{i.id}}"></td>
