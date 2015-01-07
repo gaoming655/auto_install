@@ -37,7 +37,7 @@
 					data=JSON.parse(data);
 					if (data.code == 0 ){
 						alert("添加成功");
-						 window.location.href="{% url "find" %}";
+						 window.location.href="{% url "exe" %}";
 					}
 					else if(status != "success") {
 						$(".error").html('<div class="alert alert-warning alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button><strong>注意  !!</strong><p>批量添加队列失败,服务器错误</p></div>');
