@@ -377,11 +377,25 @@ def finish_api(request):
 @login_required(login_url="/")
 def delivery(request,obj_id):
     if request.method == "GET":
-#        cache.delete("%s_ip" % obj_id)
         o = get_object_or_404(online,id=obj_id)
         o.delete()
         disk_sotl.objects.filter(host_id=int(obj_id)).delete()
+        cache.delete("%s_ip" % obj_id)
         return HttpResponseRedirect('/his/')
+@login_required(login_url="/")
+def batch_delivery(request):
+    if request.method == "POST":
+        id_list = request.POST.get('delivery_list')
+        id_list = id_list.replace(',',' ').strip().split()
+        for obj_id in id_list:
+            try:
+                o = get_object_or_404(online,id=obj_id)
+                o.delete()
+                disk_sotl.objects.filter(host_id=int(obj_id)).delete()
+                cache.delete("%s_ip" % obj_id)
+            except:
+                pass
+    return HttpResponse(json.dumps({'code':0}))
 
 @csrf_exempt
 def jindu_post(request,get_id):
