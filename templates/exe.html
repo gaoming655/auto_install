@@ -164,7 +164,13 @@
 		</td>
 		<td>{{ i.ilo_ip }}</td>
 		<td>{{ i.level }}</td>
-		<td>{{ i.raid_zh }}</td>
+		<td>
+			{% if i.raid_zh|length < 10 %}
+			{{ i.raid_zh }}
+			{% else %}
+			{{ i.raid_zh|slice:":10" }}...
+			{% endif %}
+		</td>
 		{% if i.status %}
 			<td><button disabled="disabled" type="button" class="btn btn-success btn-sm" href="/edit/{{ i.id }}" data-trigger="modal"  data-title="配置装机">-----</button></td>
 			<td><button disabled="disabled" type="button" class="btn btn-info btn-sm" id="{{i.id}}" >安装中</button></td>
