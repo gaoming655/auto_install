@@ -43,7 +43,6 @@ DISK(){
 	grub-install --root-directory=/mnt/ $sdx 
 	cp /root/vmlinuz  /mnt/boot/
 	cp /root/initrd.img  /mnt/boot/
-	ipmitool -l lanplus  chassis bootdev disk
 }
 
 HP_RAID(){
